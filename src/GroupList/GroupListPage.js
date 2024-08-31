@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';  // useNavigate import 추가
+import { useNavigate } from 'react-router-dom';
 import './GroupListPage.css';
 
 function GroupListPage() {
@@ -22,41 +22,24 @@ function GroupListPage() {
   const [sortBy, setSortBy] = useState('latest');
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  const navigate = useNavigate();  // useNavigate 훅 사용
-
-  // 로컬 스토리지에서 그룹 로드
-  const loadGroupsFromLocalStorage = useCallback(() => {
-    const storedGroups = localStorage.getItem('groups');
-    if (storedGroups) {
-      const parsedGroups = JSON.parse(storedGroups);
-      const sortedGroups = parsedGroups.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setGroups(sortedGroups);
-      setFilteredGroups(sortedGroups.slice(0, pageSize)); // 초기 페이지의 데이터 설정
-    }
-  }, [pageSize]);
-
-  // 로컬 스토리지에 그룹 저장
-  const saveGroupsToLocalStorage = useCallback((groups) => {
-    localStorage.setItem('groups', JSON.stringify(groups));
-  }, []);
+  const navigate = useNavigate();
 
   // 그룹 데이터를 서버에서 가져오기
   const fetchGroups = useCallback(async () => {
     try {
-      const response = await fetch(`/api/groups?page=1&pageSize=1000&sortBy=${sortBy}&keyword=${searchKeyword}&isPublic=${formData.isPublic}`);
+      const response = await fetch(`/api/groups?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${searchKeyword}&isPublic=${formData.isPublic}`);
       const data = await response.json();
       setGroups(data.data);
       setFilteredGroups(data.data.slice(0, pageSize * page)); // 현재 페이지의 데이터 설정
-      saveGroupsToLocalStorage(data.data);
     } catch (error) {
       console.error('그룹 목록 조회 실패:', error);
     }
-  }, [sortBy, searchKeyword, formData.isPublic, pageSize, page, saveGroupsToLocalStorage]);
+  }, [sortBy, searchKeyword, formData.isPublic, pageSize, page]);
 
   useEffect(() => {
     setSortBy('latest');  // 페이지 로드 시 sortBy를 'latest'로 설정
-    loadGroupsFromLocalStorage();
-  }, [loadGroupsFromLocalStorage]);
+    fetchGroups();
+  }, [fetchGroups]);
 
   useEffect(() => {
     fetchGroups();
@@ -180,42 +163,43 @@ function GroupListPage() {
         throw new Error('모든 필드를 채워주세요.');
       }
 
-      // 이미지 업로드 모의
-      const mockImageUpload = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({ imageUrl: selectedFile ? URL.createObjectURL(selectedFile) : null });
-        }, 1000);
+      // 이미지 업로드
+      let imageUrl = null;
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        const imageUploadResponse = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+        const imageUploadData = await imageUploadResponse.json();
+        imageUrl = imageUploadData.imageUrl;
+      }
+
+      // 그룹 생성 요청
+      const response = await fetch('/api/groups', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          password: formData.password,
+          introduction: formData.introduction,
+          isPublic: formData.isPublic,
+          imageUrl: imageUrl,
+        }),
       });
 
-      const imageData = await mockImageUpload;
-      const imageUrl = imageData.imageUrl;
+      if (!response.ok) {
+        throw new Error('그룹 등록에 실패하였습니다.');
+      }
 
-      // 그룹 생성 모의
-      const mockGroupCreation = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            id: groups.length + 1,
-            name: formData.name,
-            password: formData.password,
-            imageUrl: imageUrl,
-            isPublic: formData.isPublic,
-            introduction: formData.introduction,
-            createdAt: new Date().toISOString(),
-            badges: Math.floor(Math.random() * 10),  // Mock data for badges
-            memories: Math.floor(Math.random() * 100),  // Mock data for memories
-            likes: Math.floor(Math.random() * 1000),  // Mock data for likes
-          });
-        }, 1000);
-      });
-
-      const groupData = await mockGroupCreation;
-
-      const updatedGroups = [...groups, groupData];
-      const sortedGroups = updatedGroups.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 최신순으로 정렬
-      setGroups(sortedGroups);
-      setFilteredGroups(sortedGroups.slice(0, pageSize * page)); // 최신순으로 정렬 후 데이터 설정
+      const groupData = await response.json();
+      setGroups(prevGroups => [groupData, ...prevGroups]);
+      setFilteredGroups(prevFiltered => [groupData, ...prevFiltered].slice(0, pageSize * page)); // 최신순으로 정렬 후 데이터 설정
       setSortBy('latest');  // 그룹을 만든 후에도 sortBy를 최신순으로 설정
-      saveGroupsToLocalStorage(sortedGroups);
+
       setFormData({
         name: '',
         password: '',
@@ -227,7 +211,7 @@ function GroupListPage() {
       setSuccessMessage('그룹이 성공적으로 등록되었습니다.');
     } catch (error) {
       console.error('Error:', error);
-      setErrorMessage('그룹 등록에 실패하였습니다.');
+      setErrorMessage(error.message || '그룹 등록에 실패하였습니다.');
     }
   };
 
