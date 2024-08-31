@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "name": "codeitjg",
-=======
-  "name": "zogakzip_v3",
->>>>>>> yuna
   "version": "0.1.0",
   "private": true,
   "dependencies": {
