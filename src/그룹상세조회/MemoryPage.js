@@ -1,7 +1,5 @@
-//memorypage
-
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./MemoryPage.css";
 
 function MemoryPage() {
@@ -20,6 +18,7 @@ function MemoryPage() {
     groupPassword: "",
   });
   const [isPasswordRequired, setPasswordRequired] = useState(false);
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   // loadMemories 함수 정의
   const loadMemories = async () => {
@@ -80,6 +79,10 @@ function MemoryPage() {
     }
   };
 
+  const handlePostClick = (postId) => {
+    navigate(`/posts/${postId}`); // 클릭 시 상세 페이지로 이동
+  };
+
   return (
     <div className="memories-section">
       <h2>추억 목록</h2>
@@ -91,7 +94,11 @@ function MemoryPage() {
       </button>
       <div className="memories-container">
         {posts.map((post) => (
-          <div className="memory-card" key={post.id}>
+          <div
+            className="memory-card"
+            key={post.id}
+            onClick={() => handlePostClick(post.id)} // 클릭 이벤트 추가
+          >
             <img src={post.imageUrl} alt={post.title} />
             <h3>{post.title}</h3>
             <div className="tags">{post.tags.join(", ")}</div>
