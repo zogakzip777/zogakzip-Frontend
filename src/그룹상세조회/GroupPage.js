@@ -200,16 +200,19 @@ const GroupPage = ({ groupId }) => {
               </label>
               <label>
                 그룹 공개 선택:
-                <input
-                  type="checkbox"
-                  checked={newGroupData.isPublic}
-                  onChange={(e) =>
-                    setNewGroupData({
-                      ...newGroupData,
-                      isPublic: e.target.checked,
-                    })
-                  }
-                />
+                <div className="switch">
+                  <input
+                    type="checkbox"
+                    checked={newGroupData.isPublic}
+                    onChange={(e) =>
+                      setNewGroupData({
+                        ...newGroupData,
+                        isPublic: e.target.checked,
+                      })
+                    }
+                  />
+                  <span className="slider round"></span>
+                </div>
               </label>
               <label>
                 수정 권한 인증:
