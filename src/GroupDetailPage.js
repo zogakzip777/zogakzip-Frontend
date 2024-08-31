@@ -15,3 +15,5 @@ function GroupDetailPage() {
 }
 
 export default GroupDetailPage;
+
+//edi
