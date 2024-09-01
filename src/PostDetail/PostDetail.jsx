@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Comments from '../Comments/Comments';
 import EditPost from './EditPost';
 import DeletePost from './DeletePost';
@@ -11,6 +11,7 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchPostDetail();
@@ -31,7 +32,7 @@ const PostDetail = () => {
     try {
       const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
       if (!response.ok) throw new Error('Failed to like post');
-      fetchPostDetail(); // Refresh post data
+      fetchPostDetail();
     } catch (error) {
       console.error('Error liking post:', error);
     }
@@ -41,7 +42,7 @@ const PostDetail = () => {
     try {
       const response = await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete post');
-      navigate('/'); // Redirect to home page after deletion
+      navigate('/');
     } catch (error) {
       console.error('Error deleting post:', error);
     }
@@ -52,11 +53,13 @@ const PostDetail = () => {
   return (
     <div className="post-detail">
       <div className="post-header">
-        <div>
-          <h2>{post.title}</h2>
-          <p>{post.author} • {post.isPublic ? '공개' : '비공개'}</p>
+        <h2>{post.title}</h2>
+        <div className="post-info">
+          <span>{post.author}</span>
+          <span>{post.date}</span>
+          <span>{post.location}</span>
         </div>
-        <div>
+        <div className="post-actions">
           <button onClick={() => setIsEditing(true)}>
             <img src="/public/iconpng/icon-edit.png" alt="Edit" />
             추억 수정하기
@@ -68,6 +71,14 @@ const PostDetail = () => {
         </div>
       </div>
 
+      <div className="post-image">
+        <img src={post.imageUrl} alt={post.title} />
+      </div>
+
+      <div className="post-content">
+        <p>{post.content}</p>
+      </div>
+
       <div className="post-tags">
         {post.tags.map((tag, index) => (
           <span key={index} className="tag">#{tag}</span>
@@ -75,23 +86,29 @@ const PostDetail = () => {
       </div>
 
       <div className="post-meta">
-        <span>{post.location}</span>
-        <span>{post.date}</span>
-        <img src="/public/iconpng/icon-gray.png" alt="Likes" />
-        <span>{post.likes} 좋아요</span>
-        <img src="/public/iconpng/icon-bubble.png" alt="Comments" />
-        <span>{post.comments} 댓글</span>
         <button className="sympathy-button" onClick={handleLike}>
           <img src="/public/iconpng/icon-flower.png" alt="Flower" />
           공감 보내기
         </button>
+        <span>{post.likes} 좋아요</span>
+        <span>{post.comments.length} 댓글</span>
       </div>
 
-      <div className="post-content">
-        <p>{post.content}</p>
-      </div>
+      <Comments postId={postId} comments={post.comments} />
 
-      <Comments postId={postId} />
+      <div className="pagination">
+        <button className="prev-page">&lt;</button>
+        {[1, 2, 3, 4, 5].map((page) => (
+          <button
+            key={page}
+            className={currentPage === page ? 'active' : ''}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </button>
+        ))}
+        <button className="next-page">&gt;</button>
+      </div>
 
       {isEditing && <EditPost postId={postId} onClose={() => setIsEditing(false)} onEdit={fetchPostDetail} />}
       {isDeleting && <DeletePost postId={postId} onClose={() => setIsDeleting(false)} onDelete={handleDelete} />}
