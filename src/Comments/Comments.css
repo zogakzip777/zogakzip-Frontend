@@ -1,7 +1,8 @@
 .comments-section {
-  max-width: 800px;
+  max-width: 1560px;
   margin: 0 auto;
   padding: 20px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
 .comment-modal {
@@ -11,8 +12,8 @@
   transform: translate(-50%, -50%);
   width: 480px;
   height: 700px;
-  background-color: white;
-  border-radius: 6px;
+  background-color: #FAFAFA;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -28,14 +29,22 @@
 
 .modal-header h2 {
   font-size: 24px;
+  font-weight: 700;
+  line-height: 30.05px;
+  letter-spacing: -0.03em;
+  text-align: center;
   margin: 0;
 }
 
 .close-button {
   background: none;
   border: none;
-  font-size: 24px;
   cursor: pointer;
+}
+
+.close-button img {
+  width: 30px;
+  height: 30px;
 }
 
 .comment-form {
@@ -50,30 +59,37 @@
 }
 
 .form-group label {
+  font-size: 16px;
+  font-weight: 500;
   margin-bottom: 5px;
-  font-weight: bold;
 }
 
 .form-group input,
 .form-group textarea {
+  width: 400px;
+  height: 75px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #DDDDDD;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 .form-group textarea {
-  height: 150px;
-  resize: vertical;
+  height: 190px;
+  resize: none;
 }
 
 .submit-button {
-  background-color: #333;
+  width: 400px;
+  height: 50px;
+  background-color: #282828;
   color: white;
   border: none;
-  padding: 10px 20px;
-  cursor: pointer;
   border-radius: 4px;
-  align-self: flex-end;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
 }
 
 .comments-list {
@@ -83,29 +99,39 @@
 }
 
 .comment {
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #DDDDDD;
+  padding: 20px 0;
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
-  font-size: 14px;
-  color: #666;
 }
 
-.comment p {
-  margin: 0;
-  line-height: 1.5;
+.comment-author {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20.03px;
+}
+
+.comment-date {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20.03px;
+  color: #B8B8B8;
+}
+
+.comment-content {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20.03px;
+  margin-bottom: 10px;
 }
 
 .comment-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
   gap: 10px;
 }
 
@@ -113,6 +139,42 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
-  color: #666;
+  font-size: 14px;
+  color: #8D8D8D;
+  display: flex;
+  align-items: center;
+}
+
+.comment-actions button img {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+/* 댓글 수정 모달 */
+.edit-comment-modal {
+  width: 480px;
+  height: 700px;
+}
+
+/* 댓글 삭제 모달 */
+.delete-comment-modal {
+  width: 480px;
+  height: 335px;
+}
+
+.delete-comment-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.delete-comment-modal input {
+  width: 400px;
+  height: 75px;
+  margin-bottom: 20px;
+}
+
+.delete-comment-modal .submit-button {
+  width: 400px;
 }
