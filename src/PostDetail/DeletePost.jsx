@@ -1,13 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './DeletePost.css';
 
-const DeletePost = ({ postId, onClose }) => {
+const DeletePost = ({ postId, onClose, onDelete }) => {
+  const [password, setPassword] = useState('');
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/verify-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
+        onDelete();
+        onClose();
+      } else {
+        alert('비밀번호가 일치하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('추억 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="delete-post-modal">
-      <h2>추억 삭제하기</h2>
-      <p>정말로 이 추억을 삭제하시겠습니까?</p>
-      <button onClick={() => {/* Add delete logic */}}>삭제</button>
-      <button onClick={onClose}>취소</button>
+      <div className="modal-header">
+        <h2>추억 삭제</h2>
+        <button className="close-button" onClick={onClose}>
+          <img src="/public/iconpng/icon-x.png" alt="Close" />
+        </button>
+      </div>
+      <div className="modal-content">
+        <label htmlFor="password">삭제 권한 인증</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="추억 비밀번호를 입력해 주세요"
+        />
+      </div>
+      <button className="delete-button" onClick={handleDelete}>삭제하기</button>
     </div>
   );
 };
