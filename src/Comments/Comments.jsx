@@ -1,124 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Comments.css';
 
 const Comments = ({ postId }) => {
-  const [comments, setComments] = useState([
-    { id: 1, author: '사용자1', time: '1시간 전', content: '멋진 추억이네요!' },
-    { id: 2, author: '사용자2', time: '30분 전', content: '저도 가보고 싶어요.' },
-  ]);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState({ author: '', content: '', password: '' });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('create');
-  const [currentComment, setCurrentComment] = useState({ author: '', content: '', password: '' });
+  const [editingComment, setEditingComment] = useState(null);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentComment({ ...currentComment, [name]: value });
-  };
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (modalMode === 'create') {
-      const newComment = {
-        id: comments.length + 1,
-        author: currentComment.author,
-        time: '방금 전',
-        content: currentComment.content,
-        password: currentComment.password
-      };
-      setComments([...comments, newComment]);
-    } else if (modalMode === 'edit') {
-      const updatedComments = comments.map(comment =>
-        comment.id === currentComment.id ? { ...comment, ...currentComment } : comment
-      );
-      setComments(updatedComments);
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments`);
+      if (!response.ok) throw new Error('Failed to fetch comments');
+      const data = await response.json();
+      setComments(data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
     }
-    setIsModalOpen(false);
-    setCurrentComment({ author: '', content: '', password: '' });
   };
 
-  const handleEdit = (comment) => {
-    setCurrentComment(comment);
-    setModalMode('edit');
-    setIsModalOpen(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newComment),
+      });
+      if (!response.ok) throw new Error('Failed to post comment');
+      setNewComment({ author: '', content: '', password: '' });
+      fetchComments();
+    } catch (error) {
+      console.error('Error posting comment:', error);
+    }
   };
 
-  const handleDelete = (id) => {
-    const password = prompt('댓글 비밀번호를 입력해주세요');
-    const comment = comments.find(c => c.id === id);
-    if (comment && comment.password === password) {
-      setComments(comments.filter(c => c.id !== id));
-    } else {
+  const handleEdit = async (commentId) => {
+    try {
+      const response = await fetch(`/api/comments/${commentId}/verify-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: prompt('비밀번호를 입력하세요') }),
+      });
+      if (!response.ok) throw new Error('Password verification failed');
+      const commentToEdit = comments.find(c => c.id === commentId);
+      setEditingComment(commentToEdit);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error verifying password:', error);
       alert('비밀번호가 일치하지 않습니다.');
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch(`/api/comments/${editingComment.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingComment),
+      });
+      if (!response.ok) throw new Error('Failed to update comment');
+      setIsModalOpen(false);
+      setEditingComment(null);
+      fetchComments();
+    } catch (error) {
+      console.error('Error updating comment:', error);
+    }
+  };
+
+  const handleDelete = async (commentId) => {
+    try {
+      const password = prompt('댓글 삭제를 위해 비밀번호를 입력하세요');
+      const response = await fetch(`/api/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (!response.ok) throw new Error('Failed to delete comment');
+      fetchComments();
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert('댓글 삭제에 실패했습니다. 비밀번호를 확인해주세요.');
     }
   };
 
   return (
     <div className="comments-section">
       <h3>댓글</h3>
-      <button onClick={() => { setModalMode('create'); setIsModalOpen(true); }}>댓글 작성</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="닉네임"
+          value={newComment.author}
+          onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
+          required
+        />
+        <textarea
+          placeholder="댓글을 입력하세요..."
+          value={newComment.content}
+          onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
+          required
+        />
+        <input
+          type="password"
+          placeholder="비밀번호"
+          value={newComment.password}
+          onChange={(e) => setNewComment({ ...newComment, password: e.target.value })}
+          required
+        />
+        <button type="submit">댓글 등록</button>
+      </form>
       <div className="comments-list">
         {comments.map((comment) => (
           <div key={comment.id} className="comment">
             <div className="comment-header">
               <span>{comment.author}</span>
-              <span>{comment.time}</span>
+              <span>{new Date(comment.createdAt).toLocaleString()}</span>
             </div>
             <p>{comment.content}</p>
             <div className="comment-actions">
-              <button onClick={() => handleEdit(comment)}>수정</button>
+              <button onClick={() => handleEdit(comment.id)}>수정</button>
               <button onClick={() => handleDelete(comment.id)}>삭제</button>
             </div>
           </div>
         ))}
       </div>
       {isModalOpen && (
-        <div className="comment-modal">
-          <div className="modal-header">
-            <h2>{modalMode === 'create' ? '댓글 등록' : '댓글 수정'}</h2>
-            <button className="close-button" onClick={() => setIsModalOpen(false)}>
-              <img src="/public/iconpng/icon-x.png" alt="Close" />
-            </button>
-          </div>
-          <form onSubmit={handleSubmit} className="comment-form">
-            <div className="form-group">
-              <label htmlFor="author">닉네임</label>
-              <input
-                type="text"
-                id="author"
-                name="author"
-                value={currentComment.author}
-                onChange={handleInputChange}
-                placeholder="닉네임을 입력해주세요"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="content">댓글</label>
-              <textarea
-                id="content"
-                name="content"
-                value={currentComment.content}
-                onChange={handleInputChange}
-                placeholder="댓글을 입력해주세요"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">{modalMode === 'create' ? '비밀번호 생성' : '수정 권한 인증'}</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={currentComment.password}
-                onChange={handleInputChange}
-                placeholder={modalMode === 'create' ? '댓글 비밀번호를 생성해주세요' : '댓글 비밀번호를 입력해 주세요'}
-                required
-              />
-            </div>
-            <button type="submit" className="submit-button">
-              {modalMode === 'create' ? '등록하기' : '수정하기'}
-            </button>
-          </form>
+        <div className="edit-modal">
+          <textarea
+            value={editingComment.content}
+            onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })}
+          />
+          <button onClick={handleUpdate}>수정 완료</button>
+          <button onClick={() => setIsModalOpen(false)}>취소</button>
         </div>
       )}
     </div>
