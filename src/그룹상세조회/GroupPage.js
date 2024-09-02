@@ -12,7 +12,7 @@ const GroupPage = ({ groupId }) => {
     name: "",
     imageUrl: "",
     introduction: "",
-    isPublic: false,
+    isPublic: 0,
     password: "",
   });
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
@@ -126,7 +126,10 @@ const GroupPage = ({ groupId }) => {
   return (
     <div className="group-container">
       <div className="group-image">
-        <img src={groupData.imageUrl} alt="그룹 이미지" />
+        <img
+          src={groupData.imageUrl || "logo.png"} // 기본 이미지 경로로 수정하세요
+          alt="그룹 이미지"
+        />
       </div>
       <div className="group-info">
         <h1>{groupData.name}</h1>

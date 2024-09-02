@@ -13,19 +13,34 @@ function MemoryPage() {
     tags: [],
     location: "",
     moment: "",
-    isPublic: true,
+    isPublic: 1,
     postPassword: "",
     groupPassword: "",
   });
   const [isPasswordRequired, setPasswordRequired] = useState(false);
   const navigate = useNavigate(); // useNavigate 훅 사용
 
-  // loadMemories 함수 정의
   const loadMemories = async () => {
-    const response = await fetch(`/api/groups/${groupId}/posts`);
-    const data = await response.json();
-    const publicPosts = data.filter((post) => post.isPublic);
-    setPosts(publicPosts);
+    try {
+      const response = await fetch(`/api/groups/${groupId}/posts`);
+      if (!response.ok) {
+        throw new Error("데이터를 가져오는 데 오류가 발생했습니다.");
+      }
+
+      const data = await response.json();
+
+      // data가 배열인지 확인
+      if (Array.isArray(data)) {
+        const publicPosts = data.filter((post) => post.isPublic);
+        setPosts(publicPosts);
+      } else {
+        console.error("예상하지 못한 데이터 형식:", data);
+        setPosts([]); // 빈 배열로 초기화
+      }
+    } catch (error) {
+      console.error("메모리 로드 중 오류 발생:", error);
+      setPosts([]); // 빈 배열로 초기화
+    }
   };
 
   useEffect(() => {

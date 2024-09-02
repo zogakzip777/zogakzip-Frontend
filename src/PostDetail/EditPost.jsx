@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import './EditPost.css';
+import React, { useState, useEffect } from "react";
+import "./EditPost.css";
 
 const EditPost = ({ postId, onClose, onEdit }) => {
   const [post, setPost] = useState({
-    nickname: '',
-    title: '',
+    nickname: "",
+    title: "",
     image: null,
-    content: '',
+    content: "",
     tags: [],
-    location: '',
-    date: '',
-    isPublic: true,
-    password: ''
+    location: "",
+    date: "",
+    isPublic: 1,
+    password: "",
   });
 
   useEffect(() => {
@@ -21,29 +21,29 @@ const EditPost = ({ postId, onClose, onEdit }) => {
   const fetchPost = async () => {
     try {
       const response = await fetch(`/api/posts/${postId}`);
-      if (!response.ok) throw new Error('Failed to fetch post');
+      if (!response.ok) throw new Error("Failed to fetch post");
       const data = await response.json();
       setPost(data);
     } catch (error) {
-      console.error('Error fetching post:', error);
+      console.error("Error fetching post:", error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
-    setPost(prev => ({
+    setPost((prev) => ({
       ...prev,
-      [name]: type === 'file' ? e.target.files[0] : value
+      [name]: type === "file" ? e.target.files[0] : value,
     }));
   };
 
   const handleTagInput = (e) => {
-    if (e.key === 'Enter' && e.target.value) {
-      setPost(prev => ({
+    if (e.key === "Enter" && e.target.value) {
+      setPost((prev) => ({
         ...prev,
-        tags: [...prev.tags, e.target.value]
+        tags: [...prev.tags, e.target.value],
       }));
-      e.target.value = '';
+      e.target.value = "";
     }
   };
 
@@ -52,7 +52,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
     try {
       const formData = new FormData();
       for (let key in post) {
-        if (key === 'tags') {
+        if (key === "tags") {
           formData.append(key, JSON.stringify(post[key]));
         } else {
           formData.append(key, post[key]);
@@ -60,15 +60,15 @@ const EditPost = ({ postId, onClose, onEdit }) => {
       }
 
       const response = await fetch(`/api/posts/${postId}`, {
-        method: 'PUT',
-        body: formData
+        method: "PUT",
+        body: formData,
       });
 
-      if (!response.ok) throw new Error('Failed to update post');
+      if (!response.ok) throw new Error("Failed to update post");
       onEdit();
       onClose();
     } catch (error) {
-      console.error('Error updating post:', error);
+      console.error("Error updating post:", error);
     }
   };
 
@@ -111,7 +111,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 <input
                   type="text"
                   readOnly
-                  value={post.image ? post.image.name : ''}
+                  value={post.image ? post.image.name : ""}
                   placeholder="파일을 선택해 주세요"
                 />
                 <label className="file-input-label">
@@ -148,7 +148,9 @@ const EditPost = ({ postId, onClose, onEdit }) => {
               />
               <div className="tags-container">
                 {post.tags.map((tag, index) => (
-                  <span key={index} className="tag">#{tag}</span>
+                  <span key={index} className="tag">
+                    #{tag}
+                  </span>
                 ))}
               </div>
             </div>
@@ -184,7 +186,9 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                   <input
                     type="checkbox"
                     checked={post.isPublic}
-                    onChange={() => setPost(prev => ({ ...prev, isPublic: !prev.isPublic }))}
+                    onChange={() =>
+                      setPost((prev) => ({ ...prev, isPublic: !prev.isPublic }))
+                    }
                   />
                   <span className="slider"></span>
                 </label>
@@ -204,7 +208,9 @@ const EditPost = ({ postId, onClose, onEdit }) => {
             </div>
           </div>
         </div>
-        <button type="submit" className="submit-button">수정하기</button>
+        <button type="submit" className="submit-button">
+          수정하기
+        </button>
       </form>
     </div>
   );
