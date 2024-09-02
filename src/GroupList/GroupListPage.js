@@ -22,6 +22,11 @@ function GroupListPage() {
   const [sortBy, setSortBy] = useState("latest");
   const [searchKeyword, setSearchKeyword] = useState("");
 
+  // 비밀번호 확인 모달 관련 상태 추가
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [enteredPassword, setEnteredPassword] = useState("");
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+
   const navigate = useNavigate();
 
   // 그룹 데이터를 서버에서 가져오기
@@ -143,6 +148,40 @@ function GroupListPage() {
     setErrorMessage("");
   };
 
+  // 비공개 그룹 클릭 시 비밀번호 입력 모달 열기
+  const handleGroupClick = (groupId, isPublic) => {
+    if (isPublic) {
+      navigate(`/group/${groupId}`);
+    } else {
+      setSelectedGroupId(groupId);
+      setPasswordModalOpen(true);
+    }
+  };
+
+  // 비밀번호 확인 처리
+  const handlePasswordSubmit = async () => {
+    try {
+      const response = await fetch(`/api/groups/${selectedGroupId}/verify-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: enteredPassword }),
+      });
+
+      if (response.status === 200) {
+        setPasswordModalOpen(false);
+        navigate(`/group/${selectedGroupId}`);
+      } else if (response.status === 401) {
+        throw new Error("비밀번호가 일치하지 않습니다.");
+      } else {
+        throw new Error("서버 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
   // 파일 선택 시
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -181,7 +220,7 @@ function GroupListPage() {
       if (selectedFile) {
         const formDataImage = new FormData();
         formDataImage.append("image", selectedFile);
-        const imageUploadResponse = await fetch("/api/upload-image", {
+        const imageUploadResponse = await fetch("/api/image", {
           method: "POST",
           body: formDataImage,
         });
@@ -236,11 +275,6 @@ function GroupListPage() {
   // 더보기 버튼 표시 여부
   const isMoreButtonVisible = () => {
     return filteredGroups.length < groups.length;
-  };
-
-  // 그룹 클릭 시 페이지 이동
-  const handleGroupClick = (groupId) => {
-    navigate(`/group/${groupId}`); // 그룹 ID에 따라 해당 페이지로 이동
   };
 
   const formatDateDifference = (createdAt) => {
@@ -322,7 +356,7 @@ function GroupListPage() {
                 <div
                   key={group.id}
                   className="group-box"
-                  onClick={() => handleGroupClick(group.id)} // 클릭 시 해당 그룹 페이지로 이동
+                  onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
                 >
                   {group.imageUrl ? (
                     <img src={group.imageUrl} alt={group.name} />
@@ -366,7 +400,7 @@ function GroupListPage() {
                 <div
                   key={group.id}
                   className="group-box"
-                  onClick={() => handleGroupClick(group.id)} // 클릭 시 해당 그룹 페이지로 이동
+                  onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
                 >
                   <div className="group-info">
                     <p className="group-date-status">
@@ -512,6 +546,23 @@ function GroupListPage() {
                 취소
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {passwordModalOpen && (
+        <div className="modal password-modal">
+          <div className="modal-content">
+            <h2>비공개 그룹 비밀번호 입력</h2>
+            <input
+              type="password"
+              value={enteredPassword}
+              onChange={(e) => setEnteredPassword(e.target.value)}
+              className="password-input"
+              placeholder="비밀번호를 입력하세요"
+            />
+            <button onClick={handlePasswordSubmit}>확인</button>
+            <button onClick={() => setPasswordModalOpen(false)}>취소</button>
           </div>
         </div>
       )}
