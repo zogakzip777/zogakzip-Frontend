@@ -13,7 +13,7 @@ function MemoryPage() {
     tags: [],
     location: "",
     moment: "",
-    isPublic: true,
+    isPublic: 1,
     postPassword: "",
     groupPassword: "",
   });

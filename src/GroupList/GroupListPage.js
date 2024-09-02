@@ -11,7 +11,7 @@ function GroupListPage() {
     name: "",
     password: "",
     introduction: "",
-    isPublic: true,
+    isPublic: 1,
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -105,7 +105,7 @@ function GroupListPage() {
 
   // 공개 그룹 클릭 시
   const handlePublicClick = () => {
-    setFormData({ ...formData, isPublic: true });
+    setFormData({ ...formData, isPublic: 1 });
     setPage(1); // 페이지 초기화
     setPageSize(12); // 공개 그룹 페이지당 12개 설정
     setSortBy("latest"); // 공개 그룹 선택 시 정렬 기준을 최신순으로 설정
@@ -113,7 +113,7 @@ function GroupListPage() {
 
   // 비공개 그룹 클릭 시
   const handlePrivateClick = () => {
-    setFormData({ ...formData, isPublic: false });
+    setFormData({ ...formData, isPublic: 0 });
     setPage(1); // 페이지 초기화
     setPageSize(20); // 비공개 그룹 페이지당 20개 설정
     setSortBy("latest"); // 비공개 그룹 선택 시 정렬 기준을 최신순으로 설정
@@ -130,7 +130,7 @@ function GroupListPage() {
       name: "",
       password: "",
       introduction: "",
-      isPublic: true,
+      isPublic: 1,
     });
     setSelectedFile(null);
     setIsModalOpen(false);
@@ -195,15 +195,13 @@ function GroupListPage() {
       // 그룹 생성 요청
       const response = await fetch("/api/groups", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           password: formData.password,
-          introduction: formData.introduction,
-          isPublic: formData.isPublic,
           imageUrl: imageUrl,
+          isPublic: formData.isPublic,
+          introduction: formData.introduction,
         }),
       });
 
@@ -222,7 +220,7 @@ function GroupListPage() {
         name: "",
         password: "",
         introduction: "",
-        isPublic: true,
+        isPublic: 1,
       });
       setSelectedFile(null);
       setIsModalOpen(false);
