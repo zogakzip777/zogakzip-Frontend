@@ -112,13 +112,13 @@ const GroupPage = ({ groupId }) => {
       const response = await fetch(`/api/groups/${groupId}/verify-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: deletePassword }),
       });
       if (!response.ok) {
         throw new Error("비밀번호가 일치하지 않습니다.");
       }
       const deleteResponse = await fetch(`/api/groups/delete/${groupId}`, {
         method: "DELETE",
+        body: JSON.stringify({ password: deletePassword }),
       });
       if (!deleteResponse.ok) {
         throw new Error("삭제 실패");
