@@ -3,99 +3,31 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./MemoryPage.css";
 
 function MemoryPage() {
-  const { groupId } = useParams(); // URL 파라미터로 그룹 ID 가져오기
+  const { groupId } = useParams();
   const [posts, setPosts] = useState([]);
-  const [formData, setFormData] = useState({
-    nickname: "",
-    title: "",
-    content: "",
-    imageUrl: "",
-    tags: [],
-    location: "",
-    moment: "",
-    isPublic: 1,
-    postPassword: "",
-    groupPassword: "",
-  });
-  const [isPasswordRequired, setPasswordRequired] = useState(false);
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   const loadMemories = async () => {
     try {
       const response = await fetch(`/api/groups/${groupId}/posts`);
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error("데이터를 가져오는 데 오류가 발생했습니다.");
-      }
-
       const data = await response.json();
-
-      // data가 배열인지 확인
       if (Array.isArray(data)) {
         const publicPosts = data.filter((post) => post.isPublic);
         setPosts(publicPosts);
-      } else {
-        console.error("예상하지 못한 데이터 형식:", data);
-        setPosts([]); // 빈 배열로 초기화
       }
     } catch (error) {
       console.error("메모리 로드 중 오류 발생:", error);
-      setPosts([]); // 빈 배열로 초기화
     }
   };
 
   useEffect(() => {
-    loadMemories(); // 컴포넌트가 마운트될 때 메모리 로드
+    loadMemories();
   }, [groupId]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleTagChange = (e) => {
-    const { value } = e.target;
-    const tagsArray = value.split(",").map((tag) => tag.trim());
-    setFormData({ ...formData, tags: tagsArray });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.isPublic) {
-      setPasswordRequired(true);
-    } else {
-      await submitPost();
-    }
-  };
-
-  const submitPost = async () => {
-    const response = await fetch(`/api/groups/${groupId}/posts`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    if (response.ok) {
-      await loadMemories(); // 데이터를 다시 로드
-      window.history.back(); // 또는 원하는 페이지로 리다이렉트
-    }
-  };
-
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    const response = await fetch(`/api/groups/${groupId}/validate-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ groupPassword: formData.groupPassword }),
-    });
-    if (response.ok) {
-      await submitPost();
-      setPasswordRequired(false);
-    } else {
-      alert("비밀번호가 올바르지 않습니다.");
-    }
-  };
-
   const handlePostClick = (postId) => {
-    navigate(`/posts/${postId}`); // 클릭 시 상세 페이지로 이동
+    navigate(`/posts/${postId}`);
   };
 
   return (
@@ -103,8 +35,10 @@ function MemoryPage() {
       <h2>추억 목록</h2>
       <button
         className="upload-button"
-        onClick={() => setPasswordRequired(false)}
+        onClick={() => navigate(`/upload-memory/${groupId}`)}
       >
+        {" "}
+        {/* navigate로 새로운 페이지로 이동*/}
         추억 올리기
       </button>
       <div className="memories-container">
@@ -112,7 +46,7 @@ function MemoryPage() {
           <div
             className="memory-card"
             key={post.id}
-            onClick={() => handlePostClick(post.id)} // 클릭 이벤트 추가
+            onClick={() => handlePostClick(post.id)}
           >
             <img src={post.imageUrl} alt={post.title} />
             <h3>{post.title}</h3>
@@ -128,71 +62,6 @@ function MemoryPage() {
           </div>
         ))}
       </div>
-      {isPasswordRequired && (
-        <div className="password-modal">
-          <form onSubmit={handleSubmit}>
-            <h3>추억 올리기</h3>
-            <input
-              name="nickname"
-              placeholder="닉네임"
-              onChange={handleInputChange}
-            />
-            <input
-              name="title"
-              placeholder="제목"
-              onChange={handleInputChange}
-            />
-            <textarea
-              name="content"
-              placeholder="본문"
-              onChange={handleInputChange}
-            />
-            <input
-              name="imageUrl"
-              placeholder="이미지 URL"
-              onChange={handleInputChange}
-            />
-            <input
-              name="location"
-              placeholder="장소"
-              onChange={handleInputChange}
-            />
-            <input
-              name="moment"
-              placeholder="추억의 순간"
-              onChange={handleInputChange}
-            />
-            <input
-              name="tags"
-              placeholder="태그 (쉼표로 구분)"
-              onChange={handleTagChange}
-            />
-            <label>
-              <input
-                type="checkbox"
-                name="isPublic"
-                checked={formData.isPublic}
-                onChange={() =>
-                  setFormData({ ...formData, isPublic: !formData.isPublic })
-                }
-              />
-              공개
-            </label>
-            <button type="submit">올리기</button>
-          </form>
-          {isPasswordRequired && (
-            <form onSubmit={handlePasswordSubmit}>
-              <h3>비공개 추억</h3>
-              <input
-                name="groupPassword"
-                placeholder="비밀번호 입력"
-                onChange={handleInputChange}
-              />
-              <button type="submit">제출하기</button>
-            </form>
-          )}
-        </div>
-      )}
     </div>
   );
 }
