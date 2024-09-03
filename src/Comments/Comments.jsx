@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Comments.css';
 
 const Comments = ({ postId }) => {
@@ -7,11 +7,7 @@ const Comments = ({ postId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
 
-  useEffect(() => {
-    fetchComments();
-  }, [postId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${postId}/comments`);
       if (!response.ok) throw new Error('Failed to fetch comments');
@@ -20,7 +16,11 @@ const Comments = ({ postId }) => {
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
-  };
+  }, [postId]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

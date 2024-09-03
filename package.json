@@ -13,7 +13,6 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -38,7 +37,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://port-0-zogakzip-backend-m0ge71w8f3550763.sel4.cloudtype.app/"
-
+  "proxy": "http://localhost:6000"
 }
-
