@@ -1,5 +1,3 @@
-//groupPage
-
 import React, { useEffect, useState } from "react";
 import "./GroupPage.css";
 
@@ -8,19 +6,20 @@ const GroupPage = ({ groupId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newGroupData, setNewGroupData] = useState({
     name: "",
     imageUrl: "",
     introduction: "",
-    isPublic: 0,
+    isPublic: false,
     password: "",
   });
+  const [deletePassword, setDeletePassword] = useState("");
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
 
-  // 그룹 ID가 변경될 때마다 데이터 새로 가져오기
   useEffect(() => {
     const fetchGroupData = async () => {
-      setLoading(true); // 로딩 상태 시작
+      setLoading(true);
       try {
         const response = await fetch(`/api/groups/${groupId}`);
         if (!response.ok) {
@@ -28,11 +27,11 @@ const GroupPage = ({ groupId }) => {
         }
         const data = await response.json();
         setGroupData(data);
-        setNewGroupData(data); // 초기화 시 그룹 데이터로 설정
+        setNewGroupData(data);
       } catch (err) {
         setError(err.message);
       } finally {
-        setLoading(false); // 로딩 상태 종료
+        setLoading(false);
       }
     };
 
@@ -48,6 +47,15 @@ const GroupPage = ({ groupId }) => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setIsPasswordCorrect(false);
+  };
+
+  const handleDeleteModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+    setDeletePassword("");
   };
 
   const handlePasswordChange = (e) => {
@@ -71,12 +79,23 @@ const GroupPage = ({ groupId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isPasswordCorrect) {
+      alert("비밀번호 인증이 필요합니다.");
+      return;
+    }
     try {
-      const response = await fetch("/api/groups/update", {
-        method: "POST",
+      const response = await fetch(`/api/groups/${groupId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGroupData),
+        body: JSON.stringify({
+          name: newGroupData.name,
+          password: newGroupData.password,
+          imageUrl: newGroupData.imageUrl,
+          isPublic: newGroupData.isPublic,
+          introduction: newGroupData.introduction,
+        }),
       });
+
       if (!response.ok) {
         throw new Error("수정 실패");
       }
@@ -89,19 +108,26 @@ const GroupPage = ({ groupId }) => {
   };
 
   const handleDeleteGroup = async () => {
-    if (window.confirm("정말로 이 그룹을 삭제하시겠습니까?")) {
-      try {
-        const response = await fetch(`/api/groups/delete/${groupId}`, {
-          method: "DELETE",
-        });
-        if (!response.ok) {
-          throw new Error("삭제 실패");
-        }
-        alert("그룹이 삭제되었습니다.");
-        setGroupData(null);
-      } catch (err) {
-        alert(err.message);
+    try {
+      const response = await fetch(`/api/groups/${groupId}/verify-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: deletePassword }),
+      });
+      if (!response.ok) {
+        throw new Error("비밀번호가 일치하지 않습니다.");
       }
+      const deleteResponse = await fetch(`/api/groups/delete/${groupId}`, {
+        method: "DELETE",
+      });
+      if (!deleteResponse.ok) {
+        throw new Error("삭제 실패");
+      }
+      alert("그룹이 삭제되었습니다.");
+      setGroupData(null);
+      handleDeleteModalClose();
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -126,10 +152,7 @@ const GroupPage = ({ groupId }) => {
   return (
     <div className="group-container">
       <div className="group-image">
-        <img
-          src={groupData.imageUrl || "logo.png"} // 기본 이미지 경로로 수정하세요
-          alt="그룹 이미지"
-        />
+        <img src={groupData.imageUrl || "logo.png"} alt="그룹 이미지" />
       </div>
       <div className="group-info">
         <h1>{groupData.name}</h1>
@@ -157,7 +180,7 @@ const GroupPage = ({ groupId }) => {
       </div>
       <div className="buttons">
         <button onClick={handleModalOpen}>그룹 정보 수정하기</button>
-        <button onClick={handleDeleteGroup}>그룹 삭제하기</button>
+        <button onClick={handleDeleteModalOpen}>그룹 삭제하기</button>
         <button onClick={handleSendLike}>공감 보내기</button>
       </div>
 
@@ -232,6 +255,25 @@ const GroupPage = ({ groupId }) => {
               {isPasswordCorrect && <button type="submit">수정하기</button>}
             </form>
             <button onClick={handleModalClose}>닫기</button>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>그룹 삭제</h2>
+            <label>
+              삭제 권한 인증:
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="비밀번호를 입력해 주세요"
+              />
+            </label>
+            <button onClick={handleDeleteGroup}>삭제하기</button>
+            <button onClick={handleDeleteModalClose}>닫기</button>
           </div>
         </div>
       )}
