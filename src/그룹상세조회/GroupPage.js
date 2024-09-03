@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./GroupPage.css";
+import logo from "./logo.png";
 
 const GroupPage = ({ groupId }) => {
   const [groupData, setGroupData] = useState(null);
@@ -131,7 +132,11 @@ const GroupPage = ({ groupId }) => {
   return (
     <div className="group-container">
       <div className="group-image">
-        <img src={groupData.imageUrl || "logo.png"} alt="그룹 이미지" />
+        <img
+          src={groupData.imageUrl ? groupData.imageUrl : logo}
+          alt="그룹 이미지"
+          style={{ width: "100px", height: "100px" }} // 원하는 크기로 설정
+        />
       </div>
       <div className="group-info">
         <h1>{groupData.name}</h1>

@@ -1,0 +1,175 @@
+.uploadmemoryPage {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.upload-memory {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.upload-memory h3 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.upload-memory form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.upload-memory label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #555;
+}
+
+.upload-memory input[type="text"],
+.upload-memory input[type="date"],
+.upload-memory input[type="password"],
+.upload-memory textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.upload-memory input[type="file"] {
+  display: none;
+}
+
+.upload-memory .file-input-wrapper {
+  display: flex;
+  width: 20%;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.upload-memory .file-input-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.upload-memory .file-name {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.upload-memory textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.upload-memory .tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.upload-memory .tag {
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.upload-memory .tag-remove {
+  margin-left: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #888;
+}
+
+.upload-memory .toggle-switch {
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}
+
+.upload-memory .toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.upload-memory .slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.upload-memory .slider:before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.upload-memory input:checked + .slider {
+  background-color: #282828;
+}
+
+.upload-memory input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* 새로운 버튼 컨테이너 스타일 */
+.upload-memory .button-container {
+  display: inline-block;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.upload-memory button {
+  flex: 1;
+  padding: 10px;
+  width: 13%;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  color: white;
+}
+
+.upload-memory button[type="submit"] {
+  background-color: #282828;
+  margin-right: 10px;
+}
+
+.upload-memory button[type="submit"]:hover {
+  background-color: #282828;
+}
+
+.upload-memory button[type="button"] {
+  background-color: #282828;
+  width: 15%;
+}
+
+.upload-memory button[type="button"]:hover {
+  background-color: #ccc;
+}

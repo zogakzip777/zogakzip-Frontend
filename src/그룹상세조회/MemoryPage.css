@@ -59,6 +59,11 @@ h2 {
   margin: 10px;
 }
 
+/* memorypage 전용 스타일 */
+.memorypage .memories-section {
+  /* 추가적인 스타일을 여기에 작성할 수 있습니다. */
+}
+
 .password-modal {
   position: fixed;
   top: 0;
