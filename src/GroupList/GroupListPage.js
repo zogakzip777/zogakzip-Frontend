@@ -246,26 +246,29 @@ function GroupListPage() {
         }),
       });
 
-      if (!response.ok) {
+      console.log('Response status:', response.status); // 응답 상태 코드 확인
+      const groupData = await response.json();
+      console.log('Response data:', groupData); // 응답 데이터 확인
+
+      if (response.status === 201) {
+        setGroups((prevGroups) => [groupData, ...prevGroups]);
+        setFilteredGroups((prevFiltered) =>
+          [groupData, ...prevFiltered].slice(0, pageSize * page)
+        ); // 최신순으로 정렬 후 데이터 설정
+        setSortBy("latest"); // 그룹을 만든 후에도 sortBy를 최신순으로 설정
+
+        setFormData({
+          name: "",
+          password: "",
+          introduction: "",
+          isPublic: true,
+        });
+        setSelectedFile(null);
+        setIsModalOpen(false);
+        setSuccessMessage("그룹이 성공적으로 등록되었습니다.");
+      } else {
         throw new Error("그룹 등록에 실패하였습니다.");
       }
-
-      const groupData = await response.json();
-      setGroups((prevGroups) => [groupData, ...prevGroups]);
-      setFilteredGroups((prevFiltered) =>
-        [groupData, ...prevFiltered].slice(0, pageSize * page)
-      ); // 최신순으로 정렬 후 데이터 설정
-      setSortBy("latest"); // 그룹을 만든 후에도 sortBy를 최신순으로 설정
-
-      setFormData({
-        name: "",
-        password: "",
-        introduction: "",
-        isPublic: true,
-      });
-      setSelectedFile(null);
-      setIsModalOpen(false);
-      setSuccessMessage("그룹이 성공적으로 등록되었습니다.");
     } catch (error) {
       console.error("Error:", error);
       setErrorMessage(error.message || "그룹 등록에 실패하였습니다.");
