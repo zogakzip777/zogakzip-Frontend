@@ -40,17 +40,20 @@ const Comments = ({ postId }) => {
       if (!response.ok) throw new Error('Failed to post comment');
       setNewComment({ author: '', content: '', password: '' });
       fetchComments();
+      alert('댓글이 등록되었습니다.');
     } catch (error) {
       console.error('Error posting comment:', error);
+      alert('댓글 등록에 실패했습니다.');
     }
   };
 
   const handleEdit = async (commentId) => {
     try {
+      const password = prompt('비밀번호를 입력하세요');
       const response = await fetch(`/api/comments/${commentId}/verify-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: prompt('비밀번호를 입력하세요') }),
+        body: JSON.stringify({ password }),
       });
       if (!response.ok) throw new Error('Password verification failed');
       const commentToEdit = comments.find(c => c.id === commentId);
@@ -73,8 +76,10 @@ const Comments = ({ postId }) => {
       setIsModalOpen(false);
       setEditingComment(null);
       fetchComments();
+      alert('댓글이 수정되었습니다.');
     } catch (error) {
       console.error('Error updating comment:', error);
+      alert('댓글 수정에 실패했습니다.');
     }
   };
 
@@ -88,6 +93,7 @@ const Comments = ({ postId }) => {
       });
       if (!response.ok) throw new Error('Failed to delete comment');
       fetchComments();
+      alert('댓글이 삭제되었습니다.');
     } catch (error) {
       console.error('Error deleting comment:', error);
       alert('댓글 삭제에 실패했습니다. 비밀번호를 확인해주세요.');

@@ -11,29 +11,28 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchPostDetail = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/posts/${postId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch post');
-        }
-        const data = await response.json();
-        setPost(data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        console.error('Error fetching post:', err);
-      } finally {
-        setLoading(false);
+  const fetchPostDetail = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/posts/${postId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch post');
       }
-    };
+      const data = await response.json();
+      setPost(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching post:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchPostDetail();
   }, [postId]);
 
@@ -58,6 +57,11 @@ const PostDetail = () => {
     }
   };
 
+  const handleEdit = async (updatedPost) => {
+    setPost(updatedPost);
+    setIsEditing(false);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!post) return <div>Post not found</div>;
@@ -73,9 +77,11 @@ const PostDetail = () => {
         </div>
         <div className="post-actions">
           <button onClick={() => setIsEditing(true)}>
+            <img src="/iconpng/icon-edit.png" alt="Edit" />
             추억 수정하기
           </button>
           <button onClick={() => setIsDeleting(true)}>
+            <img src="/iconpng/icon-delete.png" alt="Delete" />
             추억 삭제하기
           </button>
         </div>
@@ -97,6 +103,7 @@ const PostDetail = () => {
 
       <div className="post-meta">
         <button className="sympathy-button" onClick={handleLike}>
+          <img src="/iconpng/icon-flower.png" alt="Flower" />
           공감 보내기
         </button>
         <span>{post.likes} 좋아요</span>
@@ -105,7 +112,7 @@ const PostDetail = () => {
 
       <Comments postId={postId} />
 
-      {isEditing && <EditPost postId={postId} onClose={() => setIsEditing(false)} onEdit={() => {}} />}
+      {isEditing && <EditPost post={post} onClose={() => setIsEditing(false)} onEdit={handleEdit} />}
       {isDeleting && <DeletePost postId={postId} onClose={() => setIsDeleting(false)} onDelete={handleDelete} />}
     </div>
   );

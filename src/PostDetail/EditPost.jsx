@@ -1,45 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./EditPost.css";
 
-const EditPost = ({ postId, onClose, onEdit }) => {
-  const [post, setPost] = useState({
-    nickname: "",
-    title: "",
-    image: null,
-    content: "",
-    tags: [],
-    location: "",
-    date: "",
-    isPublic: 1,
-    password: "",
-  });
-
-  useEffect(() => {
-    fetchPost();
-  }, [postId]);
-
-  const fetchPost = async () => {
-    try {
-      const response = await fetch(`/api/posts/${postId}`);
-      if (!response.ok) throw new Error("Failed to fetch post");
-      const data = await response.json();
-      setPost(data);
-    } catch (error) {
-      console.error("Error fetching post:", error);
-    }
-  };
+const EditPost = ({ post, onClose, onEdit }) => {
+  const [editedPost, setEditedPost] = useState(post);
+  const [newImage, setNewImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
-    setPost((prev) => ({
-      ...prev,
-      [name]: type === "file" ? e.target.files[0] : value,
-    }));
+    if (type === "file") {
+      setNewImage(e.target.files[0]);
+    } else {
+      setEditedPost((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleTagInput = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      setPost((prev) => ({
+      setEditedPost((prev) => ({
         ...prev,
         tags: [...prev.tags, e.target.value],
       }));
@@ -51,24 +31,30 @@ const EditPost = ({ postId, onClose, onEdit }) => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      for (let key in post) {
+      for (let key in editedPost) {
         if (key === "tags") {
-          formData.append(key, JSON.stringify(post[key]));
-        } else {
-          formData.append(key, post[key]);
+          formData.append(key, JSON.stringify(editedPost[key]));
+        } else if (key !== "image") {
+          formData.append(key, editedPost[key]);
         }
       }
+      if (newImage) {
+        formData.append("image", newImage);
+      }
 
-      const response = await fetch(`/api/posts/${postId}`, {
+      const response = await fetch(`/api/posts/${post.id}`, {
         method: "PUT",
         body: formData,
       });
 
       if (!response.ok) throw new Error("Failed to update post");
-      onEdit();
+      const updatedPost = await response.json();
+      onEdit(updatedPost);
+      alert('게시물이 수정되었습니다.');
       onClose();
     } catch (error) {
       console.error("Error updating post:", error);
+      alert('게시물 수정에 실패했습니다.');
     }
   };
 
@@ -77,7 +63,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
       <div className="modal-header">
         <h2>추억 수정</h2>
         <button className="close-button" onClick={onClose}>
-          <img src="/public/iconpng/icon-x.png" alt="Close" />
+          <img src="/iconpng/icon-x.png" alt="Close" />
         </button>
       </div>
       <form onSubmit={handleSubmit}>
@@ -89,7 +75,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 type="text"
                 id="nickname"
                 name="nickname"
-                value={post.nickname}
+                value={editedPost.nickname}
                 onChange={handleInputChange}
                 placeholder="닉네임을 입력해 주세요"
               />
@@ -100,7 +86,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 type="text"
                 id="title"
                 name="title"
-                value={post.title}
+                value={editedPost.title}
                 onChange={handleInputChange}
                 placeholder="제목을 입력해 주세요"
               />
@@ -111,7 +97,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 <input
                   type="text"
                   readOnly
-                  value={post.image ? post.image.name : ""}
+                  value={newImage ? newImage.name : (editedPost.image ? editedPost.image.name : "")}
                   placeholder="파일을 선택해 주세요"
                 />
                 <label className="file-input-label">
@@ -131,7 +117,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
               <textarea
                 id="content"
                 name="content"
-                value={post.content}
+                value={editedPost.content}
                 onChange={handleInputChange}
                 placeholder="본문 내용을 입력해 주세요"
               />
@@ -147,7 +133,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 placeholder="태그를 입력 후 Enter"
               />
               <div className="tags-container">
-                {post.tags.map((tag, index) => (
+                {editedPost.tags.map((tag, index) => (
                   <span key={index} className="tag">
                     #{tag}
                   </span>
@@ -160,7 +146,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 type="text"
                 id="location"
                 name="location"
-                value={post.location}
+                value={editedPost.location}
                 onChange={handleInputChange}
                 placeholder="장소를 입력해 주세요"
               />
@@ -172,10 +158,10 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                   type="date"
                   id="date"
                   name="date"
-                  value={post.date}
+                  value={editedPost.date}
                   onChange={handleInputChange}
                 />
-                <img src="/public/iconpng/icon-calendar.png" alt="Calendar" />
+                <img src="/iconpng/icon-calendar.png" alt="Calendar" />
               </div>
             </div>
             <div className="form-group">
@@ -185,9 +171,9 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 <label className="switch">
                   <input
                     type="checkbox"
-                    checked={post.isPublic}
+                    checked={editedPost.isPublic}
                     onChange={() =>
-                      setPost((prev) => ({ ...prev, isPublic: !prev.isPublic }))
+                      setEditedPost((prev) => ({ ...prev, isPublic: !prev.isPublic }))
                     }
                   />
                   <span className="slider"></span>
@@ -201,7 +187,7 @@ const EditPost = ({ postId, onClose, onEdit }) => {
                 type="password"
                 id="password"
                 name="password"
-                value={post.password}
+                value={editedPost.password}
                 onChange={handleInputChange}
                 placeholder="추억 비밀번호를 입력해주세요"
               />
