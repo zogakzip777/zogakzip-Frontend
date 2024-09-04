@@ -12,6 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<GroupListPage />} />
+        <Route path="/groups/:groupId" element={<CombinedPage />} />
         <Route path="/group/:groupId" element={<CombinedPage />} />
         <Route
           path="/upload-memory/:groupId"

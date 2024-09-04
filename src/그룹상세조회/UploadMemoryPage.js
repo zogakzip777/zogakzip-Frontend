@@ -88,6 +88,7 @@ function UploadMemory() {
       }
 
       alert("추억이 성공적으로 업로드되었습니다!");
+
       navigate(`/groups/${groupId}`);
     } catch (error) {
       console.error("게시물 업로드 중 오류 발생:", error);
@@ -197,10 +198,7 @@ function UploadMemory() {
           </label>
           <div className="button-container">
             <button type="submit">올리기</button>
-            <button
-              type="button"
-              onClick={() => navigate(`/groups/${groupId}`)}
-            >
+            <button type="button" onClick={handleSubmit}>
               취소
             </button>
           </div>
