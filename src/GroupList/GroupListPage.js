@@ -6,7 +6,6 @@ function GroupListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [groups, setGroups] = useState([]);
-  const [filteredGroups, setFilteredGroups] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -18,9 +17,9 @@ function GroupListPage() {
   const [nameError, setNameError] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12); // 공개 그룹은 12개, 비공개 그룹은 20개씩 표시
-
   const [sortBy, setSortBy] = useState("latest");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
   // 비밀번호 확인 모달 관련 상태 추가
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
@@ -39,8 +38,15 @@ function GroupListPage() {
         throw new Error("그룹 목록 조회 실패");
       }
       const data = await response.json();
-      setGroups(data.data);
-      setFilteredGroups(data.data.slice(0, pageSize * page)); // 현재 페이지의 데이터 설정
+
+      // 페이지가 1이면 목록을 덮어쓰고, 그렇지 않으면 기존 목록에 추가
+      if (page === 1) {
+        setGroups(data.data);
+      } else {
+        setGroups((prevGroups) => [...prevGroups, ...data.data]);
+      }
+
+      setTotalPages(data.totalPages); // 전체 페이지 수 업데이트
     } catch (error) {
       console.error("그룹 목록 조회 실패:", error);
       setErrorMessage("그룹 목록 조회에 실패하였습니다.");
@@ -48,80 +54,40 @@ function GroupListPage() {
   }, [sortBy, searchKeyword, formData.isPublic, pageSize, page]);
 
   useEffect(() => {
-    setSortBy("latest"); // 페이지 로드 시 sortBy를 'latest'로 설정
     fetchGroups();
   }, [fetchGroups]);
 
-  useEffect(() => {
-    fetchGroups();
-  }, [fetchGroups, formData.isPublic]);
-
   // 더보기 버튼 클릭 시 동작
   const handleLoadMore = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    setFilteredGroups(groups.slice(0, nextPage * pageSize));
+    if (page < totalPages) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   // 정렬 옵션 변경 시
   const handleSortChange = (e) => {
-    const newSortBy = e.target.value;
-    setSortBy(newSortBy);
-    setPage(1); // 정렬 변경 시 페이지 초기화
-
-    let sortedGroups = [...groups];
-
-    switch (newSortBy) {
-      case "latest":
-        sortedGroups.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        break;
-      case "mostPosted":
-        sortedGroups.sort((a, b) => b.postCount - a.postCount);
-        break;
-      case "mostLiked":
-        sortedGroups.sort((a, b) => b.likeCount - a.likeCount);
-        break;
-      case "mostBadge":
-        sortedGroups.sort((a, b) => b.badgeCount - a.badgeCount);
-        break;
-      default:
-        break;
-    }
-
-    setFilteredGroups(sortedGroups.slice(0, pageSize)); // 정렬 후 데이터 설정
+    setSortBy(e.target.value);
+    setPage(1); // 정렬 변경 시 페이지 초기화 후 새로 가져오기
   };
 
   // 검색어 변경 시
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
-    setSortBy("latest"); // 검색어 변경 시 정렬 기준을 최신순으로 설정
-
-    if (e.target.value.trim() === "") {
-      setFilteredGroups(groups.slice(0, pageSize * page));
-    } else {
-      const filtered = groups.filter((group) =>
-        group.name.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      setFilteredGroups(filtered.slice(0, pageSize * page));
-    }
+    setPage(1); // 검색어 변경 시 페이지 초기화 후 새로 가져오기
   };
 
   // 공개 그룹 클릭 시
   const handlePublicClick = () => {
     setFormData({ ...formData, isPublic: 1 });
-    setPage(1); // 페이지 초기화
+    setPage(1); // 페이지 초기화 후 새로 가져오기
     setPageSize(12); // 공개 그룹 페이지당 12개 설정
-    setSortBy("latest"); // 공개 그룹 선택 시 정렬 기준을 최신순으로 설정
   };
 
   // 비공개 그룹 클릭 시
   const handlePrivateClick = () => {
     setFormData({ ...formData, isPublic: 0 });
-    setPage(1); // 페이지 초기화
+    setPage(1); // 페이지 초기화 후 새로 가져오기
     setPageSize(20); // 비공개 그룹 페이지당 20개 설정
-    setSortBy("latest"); // 비공개 그룹 선택 시 정렬 기준을 최신순으로 설정
   };
 
   // 그룹 만들기 버튼 클릭 시
@@ -255,10 +221,8 @@ function GroupListPage() {
 
       const groupData = await response.json();
       setGroups((prevGroups) => [groupData, ...prevGroups]);
-      setFilteredGroups((prevFiltered) =>
-        [groupData, ...prevFiltered].slice(0, pageSize * page)
-      ); // 최신순으로 정렬 후 데이터 설정
-      setSortBy("latest"); // 그룹을 만든 후에도 sortBy를 최신순으로 설정
+      setPage(1); // 그룹을 만든 후 최신순으로 다시 정렬
+      setSortBy("latest"); // sortBy를 최신순으로 설정
 
       setFormData({
         name: "",
@@ -277,7 +241,7 @@ function GroupListPage() {
 
   // 더보기 버튼 표시 여부
   const isMoreButtonVisible = () => {
-    return filteredGroups.length < groups.length;
+    return page < totalPages;
   };
 
   const formatDateDifference = (createdAt) => {
@@ -292,7 +256,10 @@ function GroupListPage() {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <div className="header-container">
-        <h1 className="title">조각집</h1>
+        <img 
+          src={`${process.env.PUBLIC_URL}/logo.png`}
+          alt="조각집"
+          className="title"/>
         <button
           onClick={handleCreateGroupClick}
           className="create-group-button"
@@ -328,7 +295,10 @@ function GroupListPage() {
           </button>
         </div>
 
+        
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          
+
           <input
             type="text"
             className="search-input"
@@ -351,84 +321,106 @@ function GroupListPage() {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        {formData.isPublic ? (
-          <div className="group-grid public-grid">
-            {filteredGroups
-              .filter((group) => group.isPublic)
-              .map((group) => (
-                <div
-                  key={group.id}
-                  className="group-box"
-                  onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
-                >
-                  {group.imageUrl ? (
-                    <img src={group.imageUrl} alt={group.name} />
-                  ) : null}
-                  <div className="group-info">
-                    <p className="group-date-status">
-                      {formatDateDifference(group.createdAt)}
-                      <span
-                        className={
-                          group.isPublic ? "status-public" : "status-private"
-                        }
-                      >
-                        {group.isPublic ? " | 공개" : "| 비공개"}
-                      </span>
-                    </p>
-                    <h3 className="group-name">{group.name}</h3>
-                    <p className="group-introduction">{group.introduction}</p>
-                    <div className="group-stats">
-                      <div className="stat-item">
-                        <span className="stat-label">획득 배지</span>
-                        <span className="stat-value">{group.badgeCount}</span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-label">추억</span>
-                        <span className="stat-value">{group.postCount}</span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-label">그룹 공감</span>
-                        <span className="stat-value">{group.likeCount}K</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+        {groups.length === 0 ? (
+          <div className='empty-state'>
+            <img
+              src={`${process.env.PUBLIC_URL}/icon.png`}
+              alt="No groups available"
+              className="empty-state-image"
+              />
+            <p className="empty-state-message">
+              {formData.isPublic ? "등록된 공개 그룹이 없습니다." : "등록된 비공개 그룹이 없습니다."}</p>
+            <p className="empty-state-message">가장 먼저 그룹을 만들어보세요!</p>  
+            <button className="empty-button" onClick={handleCreateGroupClick}>
+              그룹 만들기
+            </button>
           </div>
         ) : (
-          <div className="group-grid private-grid">
-            {filteredGroups
-              .filter((group) => !group.isPublic)
-              .map((group) => (
-                <div
-                  key={group.id}
-                  className="group-box"
-                  onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
-                >
-                  <div className="group-info">
-                    <p className="group-date-status">
-                      {formatDateDifference(group.createdAt)}{" "}
-                      <span className="status-private">| 비공개</span>
-                    </p>
-                    <h3 className="group-name">{group.name}</h3>
-                    <div className="group-stats">
-                      <div className="stat-item">
-                        <span className="stat-label">획득 배지</span>
-                        <span className="stat-value">{group.badgeCount}</span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-label">추억</span>
-                        <span className="stat-value">{group.postCount}</span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-label">그룹 공감</span>
-                        <span className="stat-value">{group.likeCount}K</span>
+          formData.isPublic ? (
+            <div className="group-grid public-grid">
+              {groups
+                .filter((group) => group.isPublic)
+                .map((group) => (
+                  <div
+                    key={group.id}
+                    className="group-box"
+                    onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
+                  >
+                    {group.imageUrl ? (
+                      <img src={group.imageUrl} alt={group.name} />
+                    ) : null}
+                    <div className="group-info">
+                      <p className="group-date-status">
+                        {formatDateDifference(group.createdAt)}
+                        <span
+                          className={
+                            group.isPublic ? "status-public" : "status-private"
+                          }
+                        >
+                          {group.isPublic ? " | 공개" : "| 비공개"}
+                        </span>
+                      </p>
+                      <h3 className="group-name">{group.name}</h3>
+                      <p className="group-introduction">{group.introduction}</p>
+                      <div className="group-stats">
+                        <div className="stat-item">
+                          <span className="stat-label">획득 배지</span>
+                          <span className="stat-value">{group.badgeCount}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">추억</span>
+                          <span className="stat-value">{group.postCount}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">그룹 공감</span>
+                          <span className="stat-value">
+                            <img
+                              src={`${process.env.PUBLIC_URL}/Grouplike.png`}
+                              alt="Like icon"
+                              className="like-icon"
+                            />
+                            {group.likeCount}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-          </div>
+                ))}
+            </div>
+          ) : (
+            <div className="group-grid private-grid">
+              {groups
+                .filter((group) => !group.isPublic)
+                .map((group) => (
+                  <div
+                    key={group.id}
+                    className="group-box"
+                    onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
+                  >
+                    <div className="group-info">
+                      <p className="group-date-status">
+                        {formatDateDifference(group.createdAt)}{" "}
+                        <span className="status-private">| 비공개</span>
+                      </p>
+                      <h3 className="group-name">{group.name}</h3>
+                      <div className="group-stats">
+                        <div className="stat-item">
+                          <span className="stat-label">획득 배지</span>
+                          <span className="stat-value">{group.badgeCount}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">추억</span>
+                          <span className="stat-value">{group.postCount}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">그룹 공감</span>
+                          <span className="stat-value">{group.likeCount}K</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )
         )}
       </div>
 
