@@ -6,7 +6,7 @@ import DeletePost from "./DeletePost";
 import "./PostDetail.css";
 
 const PostDetail = () => {
-  const { postId } = useParams();
+  const { groupId, postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,7 +38,7 @@ const PostDetail = () => {
 
   const handleLike = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}/like`, {
+      const response = await fetch(`/api/groups/${groupId}/posts/${postId}/like`, {
         method: "POST",
       });
       if (!response.ok) throw new Error("Failed to like post");
@@ -55,7 +55,7 @@ const PostDetail = () => {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete post");
-      navigate("/");
+      navigate(`/groups/${groupId}`);
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -66,9 +66,9 @@ const PostDetail = () => {
     setIsEditing(false);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!post) return <div>Post not found</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!post) return <div className="not-found">Post not found</div>;
 
   return (
     <div className="post-detail">
@@ -76,18 +76,19 @@ const PostDetail = () => {
         <h2>{post.title}</h2>
         <div className="post-info">
           <span>{post.author}</span>
-          <span>{new Date(post.date).toLocaleDateString()}</span>
-          <span>{post.location}</span>
+          <span>{post.isPublic ? "공개" : "비공개"}</span>
         </div>
-        <div className="post-actions">
-          <button onClick={() => setIsEditing(true)}>
-            <img src="/iconpng/icon=edit.png" alt="Edit" />
-            추억 수정하기
-          </button>
-          <button onClick={() => setIsDeleting(true)}>
-            <img src="/iconpng/icon=delete.png" alt="Delete" />
-            추억 삭제하기
-          </button>
+        <div className="post-tags">
+          {post.tags &&
+            post.tags.map((tag, index) => (
+              <span key={index} className="tag">
+                #{tag}
+              </span>
+            ))}
+        </div>
+        <div className="post-meta">
+          <span>{post.location}</span>
+          <span>{new Date(post.date).toLocaleDateString()}</span>
         </div>
       </div>
 
@@ -99,22 +100,30 @@ const PostDetail = () => {
         <p>{post.content}</p>
       </div>
 
-      <div className="post-tags">
-        {post.tags &&
-          post.tags.map((tag, index) => (
-            <span key={index} className="tag">
-              #{tag}
-            </span>
-          ))}
-      </div>
-
-      <div className="post-meta">
+      <div className="post-actions">
+        <button onClick={() => setIsEditing(true)}>
+          <img src="/iconpng/icon=edit.png" alt="Edit" />
+          추억 수정하기
+        </button>
+        <button onClick={() => setIsDeleting(true)}>
+          <img src="/iconpng/icon=delete.png" alt="Delete" />
+          추억 삭제하기
+        </button>
         <button className="sympathy-button" onClick={handleLike}>
           <img src="/iconpng/icon=flower.png" alt="Flower" />
           공감 보내기
         </button>
-        <span>{post.likes} 좋아요</span>
-        <span>{post.comments ? post.comments.length : 0} 댓글</span>
+      </div>
+
+      <div className="post-stats">
+        <span>
+          <img src="/iconpng/icon=flower.png" alt="Likes" />
+          {post.likes} 공감
+        </span>
+        <span>
+          <img src="/iconpng/icon=bubble.png" alt="Comments" />
+          {post.comments ? post.comments.length : 0} 댓글
+        </span>
       </div>
 
       <Comments postId={postId} />

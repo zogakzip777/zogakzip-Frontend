@@ -1,9 +1,61 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './Comments.css';
 
+const CommentModal = ({ isOpen, onClose, onSubmit }) => {
+  const [newComment, setNewComment] = useState({ author: '', content: '', password: '' });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(newComment);
+    setNewComment({ author: '', content: '', password: '' });
+    onClose();
+  };
+
+  return (
+    <div className="comment-modal">
+      <div className="modal-content">
+        <h2>댓글 등록</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>닉네임</label>
+            <input
+              type="text"
+              placeholder="닉네임을 입력해 주세요"
+              value={newComment.author}
+              onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>댓글</label>
+            <textarea
+              placeholder="댓글을 입력해 주세요"
+              value={newComment.content}
+              onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>비밀번호 생성</label>
+            <input
+              type="password"
+              placeholder="댓글 비밀번호를 생성해 주세요"
+              value={newComment.password}
+              onChange={(e) => setNewComment({ ...newComment, password: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="submit-button">등록하기</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState({ author: '', content: '', password: '' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,21 +81,23 @@ const Comments = ({ postId }) => {
     fetchComments();
   }, [fetchComments]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (newComment) => {
     try {
       const response = await fetch(`/api/posts/${postId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newComment),
       });
-      if (!response.ok) throw new Error('Failed to post comment');
-      setNewComment({ author: '', content: '', password: '' });
-      fetchComments();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to post comment');
+      }
+      await fetchComments();
+      setIsModalOpen(false);
       alert('댓글이 등록되었습니다.');
     } catch (error) {
       console.error('Error posting comment:', error);
-      alert('댓글 등록에 실패했습니다.');
+      alert(`댓글 등록에 실패했습니다: ${error.message}`);
     }
   };
 
@@ -58,24 +112,22 @@ const Comments = ({ postId }) => {
       if (!response.ok) throw new Error('Password verification failed');
       const commentToEdit = comments.find(c => c.id === commentId);
       setEditingComment(commentToEdit);
-      setIsModalOpen(true);
     } catch (error) {
       console.error('Error verifying password:', error);
       alert('비밀번호가 일치하지 않습니다.');
     }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (updatedComment) => {
     try {
-      const response = await fetch(`/api/comments/${editingComment.id}`, {
+      const response = await fetch(`/api/comments/${updatedComment.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingComment),
+        body: JSON.stringify(updatedComment),
       });
       if (!response.ok) throw new Error('Failed to update comment');
-      setIsModalOpen(false);
       setEditingComment(null);
-      fetchComments();
+      await fetchComments();
       alert('댓글이 수정되었습니다.');
     } catch (error) {
       console.error('Error updating comment:', error);
@@ -92,7 +144,7 @@ const Comments = ({ postId }) => {
         body: JSON.stringify({ password }),
       });
       if (!response.ok) throw new Error('Failed to delete comment');
-      fetchComments();
+      await fetchComments();
       alert('댓글이 삭제되었습니다.');
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -102,30 +154,10 @@ const Comments = ({ postId }) => {
 
   return (
     <div className="comments-section">
-      <h3>댓글</h3>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="닉네임"
-          value={newComment.author}
-          onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
-          required
-        />
-        <textarea
-          placeholder="댓글을 입력하세요..."
-          value={newComment.content}
-          onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
-          required
-        />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={newComment.password}
-          onChange={(e) => setNewComment({ ...newComment, password: e.target.value })}
-          required
-        />
-        <button type="submit">댓글 등록</button>
-      </form>
+      <div className="comments-header">
+        <h3>댓글</h3>
+        <button onClick={() => setIsModalOpen(true)} className="add-comment-button">댓글 등록</button>
+      </div>
       <div className="comments-list">
         {loading ? (
           <p>댓글을 불러오는 중...</p>
@@ -135,13 +167,19 @@ const Comments = ({ postId }) => {
           comments.map((comment) => (
             <div key={comment.id} className="comment">
               <div className="comment-header">
-                <span>{comment.author}</span>
-                <span>{new Date(comment.createdAt).toLocaleString()}</span>
+                <span className="comment-author">{comment.author}</span>
+                <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
               </div>
-              <p>{comment.content}</p>
+              <p className="comment-content">{comment.content}</p>
               <div className="comment-actions">
-                <button onClick={() => handleEdit(comment.id)}>수정</button>
-                <button onClick={() => handleDelete(comment.id)}>삭제</button>
+                <button onClick={() => handleEdit(comment.id)}>
+                  <img src="/public/iconpng/icon=edit.png" alt="Edit" />
+                  수정
+                </button>
+                <button onClick={() => handleDelete(comment.id)}>
+                  <img src="/public/iconpng/icon=x.png" alt="Delete" />
+                  삭제
+                </button>
               </div>
             </div>
           ))
@@ -149,14 +187,24 @@ const Comments = ({ postId }) => {
           <p>아직 댓글이 없습니다.</p>
         )}
       </div>
-      {isModalOpen && (
-        <div className="edit-modal">
-          <textarea
-            value={editingComment.content}
-            onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })}
-          />
-          <button onClick={handleUpdate}>수정 완료</button>
-          <button onClick={() => setIsModalOpen(false)}>취소</button>
+      <CommentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+      />
+      {editingComment && (
+        <div className="edit-comment-modal">
+          <div className="modal-content">
+            <h2>댓글 수정</h2>
+            <textarea
+              value={editingComment.content}
+              onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })}
+            />
+            <div className="modal-actions">
+              <button onClick={() => handleUpdate(editingComment)}>수정 완료</button>
+              <button onClick={() => setEditingComment(null)}>취소</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
