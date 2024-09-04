@@ -165,9 +165,11 @@ const GroupPage = ({ groupId }) => {
       <div className="buttons">
         <button onClick={handleModalOpen}>그룹 정보 수정하기</button>
         <button onClick={handleDeleteModalOpen}>그룹 삭제하기</button>
-        <button onClick={handleSendLike}>공감 보내기</button>
+        <button onClick={handleSendLike}>
+          <img src="/iconpng/icon=flower.png" alt="Flower" />
+          공감 보내기
+        </button>
       </div>
-
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">

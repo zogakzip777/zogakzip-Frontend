@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import Comments from '../Comments/Comments';
-import EditPost from './EditPost';
-import DeletePost from './DeletePost';
-import './PostDetail.css';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import Comments from "../Comments/Comments";
+import EditPost from "./EditPost";
+import DeletePost from "./DeletePost";
+import "./PostDetail.css";
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -19,14 +19,14 @@ const PostDetail = () => {
     try {
       const response = await fetch(`/api/posts/${postId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch post');
+        throw new Error("Failed to fetch post");
       }
       const data = await response.json();
       setPost(data);
       setError(null);
     } catch (err) {
       setError(err.message);
-      console.error('Error fetching post:', err);
+      console.error("Error fetching post:", err);
     } finally {
       setLoading(false);
     }
@@ -38,22 +38,26 @@ const PostDetail = () => {
 
   const handleLike = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
-      if (!response.ok) throw new Error('Failed to like post');
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error("Failed to like post");
       const updatedPost = await response.json();
       setPost(updatedPost);
     } catch (error) {
-      console.error('Error liking post:', error);
+      console.error("Error liking post:", error);
     }
   };
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('Failed to delete post');
-      navigate('/');
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete post");
+      navigate("/");
     } catch (error) {
-      console.error('Error deleting post:', error);
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -77,11 +81,11 @@ const PostDetail = () => {
         </div>
         <div className="post-actions">
           <button onClick={() => setIsEditing(true)}>
-            <img src="/iconpng/icon-edit.png" alt="Edit" />
+            <img src="/iconpng/icon=edit.png" alt="Edit" />
             추억 수정하기
           </button>
           <button onClick={() => setIsDeleting(true)}>
-            <img src="/iconpng/icon-delete.png" alt="Delete" />
+            <img src="/iconpng/icon=delete.png" alt="Delete" />
             추억 삭제하기
           </button>
         </div>
@@ -96,14 +100,17 @@ const PostDetail = () => {
       </div>
 
       <div className="post-tags">
-        {post.tags && post.tags.map((tag, index) => (
-          <span key={index} className="tag">#{tag}</span>
-        ))}
+        {post.tags &&
+          post.tags.map((tag, index) => (
+            <span key={index} className="tag">
+              #{tag}
+            </span>
+          ))}
       </div>
 
       <div className="post-meta">
         <button className="sympathy-button" onClick={handleLike}>
-          <img src="/iconpng/icon-flower.png" alt="Flower" />
+          <img src="/iconpng/icon=flower.png" alt="Flower" />
           공감 보내기
         </button>
         <span>{post.likes} 좋아요</span>
@@ -112,8 +119,20 @@ const PostDetail = () => {
 
       <Comments postId={postId} />
 
-      {isEditing && <EditPost post={post} onClose={() => setIsEditing(false)} onEdit={handleEdit} />}
-      {isDeleting && <DeletePost postId={postId} onClose={() => setIsDeleting(false)} onDelete={handleDelete} />}
+      {isEditing && (
+        <EditPost
+          post={post}
+          onClose={() => setIsEditing(false)}
+          onEdit={handleEdit}
+        />
+      )}
+      {isDeleting && (
+        <DeletePost
+          postId={postId}
+          onClose={() => setIsDeleting(false)}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 };
