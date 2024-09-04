@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./GroupPage.css";
+import logo from "./logo.png";
 
 const GroupPage = ({ groupId }) => {
   const [groupData, setGroupData] = useState(null);
@@ -62,27 +63,9 @@ const GroupPage = ({ groupId }) => {
     setNewGroupData({ ...newGroupData, password: e.target.value });
   };
 
-  const handleUpdateGroup = async () => {
-    try {
-      const response = await fetch(`/api/groups/${groupId}`);
-      const data = await response.json();
-
-      if (newGroupData.password === data.password) {
-        setIsPasswordCorrect(true);
-      } else {
-        alert("비밀번호가 일치하지 않습니다.");
-      }
-    } catch (err) {
-      alert("비밀번호 확인 중 오류 발생");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isPasswordCorrect) {
-      alert("비밀번호 인증이 필요합니다.");
-      return;
-    }
+
     try {
       const response = await fetch(`/api/groups/${groupId}`, {
         method: "PUT",
@@ -97,7 +80,7 @@ const GroupPage = ({ groupId }) => {
       });
 
       if (!response.ok) {
-        throw new Error("수정 실패");
+        throw new Error(response.body.message);
       }
       const updatedData = await response.json();
       setGroupData(updatedData);
@@ -109,20 +92,15 @@ const GroupPage = ({ groupId }) => {
 
   const handleDeleteGroup = async () => {
     try {
-      const response = await fetch(`/api/groups/${groupId}/verify-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response.ok) {
-        throw new Error("비밀번호가 일치하지 않습니다.");
-      }
-      const deleteResponse = await fetch(`/api/groups/delete/${groupId}`, {
+      const deleteResponse = await fetch(`/api/groups/${groupId}`, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: deletePassword }),
       });
       if (!deleteResponse.ok) {
-        throw new Error("삭제 실패");
+        throw new Error(deleteResponse.body.message);
       }
+      window.location.href = "/";
       alert("그룹이 삭제되었습니다.");
       setGroupData(null);
       handleDeleteModalClose();
@@ -133,14 +111,16 @@ const GroupPage = ({ groupId }) => {
 
   const handleSendLike = async () => {
     try {
-      const response = await fetch("/api/groups/like", {
+      const response = await fetch(`/api/groups/${groupId}/like`, {
         method: "POST",
       });
+
       if (!response.ok) {
         throw new Error("공감 보내기 실패");
+      } else {
+        alert("공감이 전송되었습니다.");
+        setGroupData((prev) => ({ ...prev, likeCount: prev.likeCount + 1 }));
       }
-      alert("공감이 전송되었습니다.");
-      setGroupData((prev) => ({ ...prev, likeCount: prev.likeCount + 1 }));
     } catch (err) {
       alert(err.message);
     }
@@ -152,7 +132,11 @@ const GroupPage = ({ groupId }) => {
   return (
     <div className="group-container">
       <div className="group-image">
-        <img src={groupData.imageUrl || "logo.png"} alt="그룹 이미지" />
+        <img
+          src={groupData.imageUrl ? groupData.imageUrl : logo}
+          alt="그룹 이미지"
+          style={{ width: "100px", height: "100px" }} // 원하는 크기로 설정
+        />
       </div>
       <div className="group-info">
         <h1>{groupData.name}</h1>
@@ -249,12 +233,10 @@ const GroupPage = ({ groupId }) => {
                   placeholder="비밀번호를 입력해 주세요"
                 />
               </label>
-              <button type="button" onClick={handleUpdateGroup}>
-                인증
+              <button type="submit" onClick={handleSubmit}>
+                수정하기
               </button>
-              {isPasswordCorrect && <button type="submit">수정하기</button>}
             </form>
-            <button onClick={handleModalClose}>닫기</button>
           </div>
         </div>
       )}

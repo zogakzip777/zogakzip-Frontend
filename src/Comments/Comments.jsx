@@ -6,15 +6,22 @@ const Comments = ({ postId }) => {
   const [newComment, setNewComment] = useState({ author: '', content: '', password: '' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingComment, setEditingComment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchComments = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await fetch(`/api/posts/${postId}/comments`);
       if (!response.ok) throw new Error('Failed to fetch comments');
       const data = await response.json();
       setComments(data);
+      setError(null);
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setError('댓글을 불러오는 데 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   }, [postId]);
 
@@ -114,19 +121,27 @@ const Comments = ({ postId }) => {
         <button type="submit">댓글 등록</button>
       </form>
       <div className="comments-list">
-        {comments.map((comment) => (
-          <div key={comment.id} className="comment">
-            <div className="comment-header">
-              <span>{comment.author}</span>
-              <span>{new Date(comment.createdAt).toLocaleString()}</span>
+        {loading ? (
+          <p>댓글을 불러오는 중...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment">
+              <div className="comment-header">
+                <span>{comment.author}</span>
+                <span>{new Date(comment.createdAt).toLocaleString()}</span>
+              </div>
+              <p>{comment.content}</p>
+              <div className="comment-actions">
+                <button onClick={() => handleEdit(comment.id)}>수정</button>
+                <button onClick={() => handleDelete(comment.id)}>삭제</button>
+              </div>
             </div>
-            <p>{comment.content}</p>
-            <div className="comment-actions">
-              <button onClick={() => handleEdit(comment.id)}>수정</button>
-              <button onClick={() => handleDelete(comment.id)}>삭제</button>
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>아직 댓글이 없습니다.</p>
+        )}
       </div>
       {isModalOpen && (
         <div className="edit-modal">

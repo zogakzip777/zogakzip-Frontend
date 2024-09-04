@@ -1,18 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GroupListPage from "./GroupList/GroupListPage";
-import CombinedPage from "./그룹상세조회/CombinedPage"; // CombinedPage를 import합니다.
-import PostDetail from "./PostDetail/PostDetail"; // 새로 추가
+import CombinedPage from "./그룹상세조회/CombinedPage";
+import PostDetail from "./PostDetail/PostDetail";
+import UploadMemoryPage from "./그룹상세조회/UploadMemoryPage";
+import PasswordVerification from "./그룹상세조회/PasswordVerification";
+import NotFoundPage from "./NotFoundPage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<GroupListPage />} />
-        <Route path="/group/:groupId" element={<CombinedPage />} />{" "}
-        {/* 두 페이지를 합친 컴포넌트 */}
-        <Route path="/post/:postId" element={<PostDetail />} />{" "}
-        {/* 새로 추가한 라우트 */}
+        <Route path="/group/:groupId" element={<CombinedPage />} />
+        <Route path="/upload-memory/:groupId" element={<UploadMemoryPage />} />
+        <Route path="/password-verification/:postId" element={<PasswordVerification />} />
+        <Route path="/post/:postId" element={<PostDetail />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

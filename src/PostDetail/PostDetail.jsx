@@ -12,27 +12,37 @@ const PostDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchPostDetail = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/posts/${postId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch post');
+        }
+        const data = await response.json();
+        setPost(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching post:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPostDetail();
   }, [postId]);
-
-  const fetchPostDetail = async () => {
-    try {
-      const response = await fetch(`/api/posts/${postId}`);
-      if (!response.ok) throw new Error('Failed to fetch post');
-      const data = await response.json();
-      setPost(data);
-    } catch (error) {
-      console.error('Error fetching post:', error);
-    }
-  };
 
   const handleLike = async () => {
     try {
       const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
       if (!response.ok) throw new Error('Failed to like post');
-      fetchPostDetail();
+      const updatedPost = await response.json();
+      setPost(updatedPost);
     } catch (error) {
       console.error('Error liking post:', error);
     }
@@ -48,7 +58,9 @@ const PostDetail = () => {
     }
   };
 
-  if (!post) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!post) return <div>Post not found</div>;
 
   return (
     <div className="post-detail">
@@ -56,23 +68,21 @@ const PostDetail = () => {
         <h2>{post.title}</h2>
         <div className="post-info">
           <span>{post.author}</span>
-          <span>{post.date}</span>
+          <span>{new Date(post.date).toLocaleDateString()}</span>
           <span>{post.location}</span>
         </div>
         <div className="post-actions">
           <button onClick={() => setIsEditing(true)}>
-            <img src="/public/iconpng/icon-edit.png" alt="Edit" />
             추억 수정하기
           </button>
           <button onClick={() => setIsDeleting(true)}>
-            <img src="/public/iconpng/icon-delete.png" alt="Delete" />
             추억 삭제하기
           </button>
         </div>
       </div>
 
       <div className="post-image">
-        <img src={post.imageUrl} alt={post.title} />
+        {post.imageUrl && <img src={post.imageUrl} alt={post.title} />}
       </div>
 
       <div className="post-content">
@@ -80,37 +90,22 @@ const PostDetail = () => {
       </div>
 
       <div className="post-tags">
-        {post.tags.map((tag, index) => (
+        {post.tags && post.tags.map((tag, index) => (
           <span key={index} className="tag">#{tag}</span>
         ))}
       </div>
 
       <div className="post-meta">
         <button className="sympathy-button" onClick={handleLike}>
-          <img src="/public/iconpng/icon-flower.png" alt="Flower" />
           공감 보내기
         </button>
         <span>{post.likes} 좋아요</span>
-        <span>{post.comments.length} 댓글</span>
+        <span>{post.comments ? post.comments.length : 0} 댓글</span>
       </div>
 
-      <Comments postId={postId} comments={post.comments} />
+      <Comments postId={postId} />
 
-      <div className="pagination">
-        <button className="prev-page">&lt;</button>
-        {[1, 2, 3, 4, 5].map((page) => (
-          <button
-            key={page}
-            className={currentPage === page ? 'active' : ''}
-            onClick={() => setCurrentPage(page)}
-          >
-            {page}
-          </button>
-        ))}
-        <button className="next-page">&gt;</button>
-      </div>
-
-      {isEditing && <EditPost postId={postId} onClose={() => setIsEditing(false)} onEdit={fetchPostDetail} />}
+      {isEditing && <EditPost postId={postId} onClose={() => setIsEditing(false)} onEdit={() => {}} />}
       {isDeleting && <DeletePost postId={postId} onClose={() => setIsDeleting(false)} onDelete={handleDelete} />}
     </div>
   );
