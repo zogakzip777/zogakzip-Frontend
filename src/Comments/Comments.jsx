@@ -72,22 +72,28 @@ const Comments = ({ postId }) => {
   const [editingComment, setEditingComment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchComments = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/posts/${postId}/comments`);
-      if (!response.ok) throw new Error("Failed to fetch comments");
-      const data = await response.json();
-      setComments(data);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      setError("댓글을 불러오는 데 실패했습니다.");
-    } finally {
-      setLoading(false);
-    }
-  }, [postId]);
+  const fetchComments = useCallback(
+    async (commentId) => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/posts/${postId}/comments?commentId=${commentId}&page=${currentPage}&pageSize=10`
+        );
+        if (!response.ok) throw new Error("Failed to fetch comments");
+        const data = await response.json();
+        setComments(data);
+        setError(null);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+        setError("댓글을 불러오는 데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [postId]
+  );
 
   useEffect(() => {
     fetchComments();
@@ -104,7 +110,7 @@ const Comments = ({ postId }) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to post comment");
       }
-      await fetchComments();
+      await fetchComments(1);
       setIsModalOpen(false);
       alert("댓글이 등록되었습니다.");
     } catch (error) {

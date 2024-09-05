@@ -144,3 +144,115 @@
   font-size: 16px;
   margin-top: 15px;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content label {
+  margin-bottom: 10px;
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.modal-content button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #282828;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #282828;
+}
+
+.group-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.group-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.group-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dddddd;
+  transition: 0.4s;
+  border-radius: 24px; /* 타원 모양을 더 부드럽게 */
+  box-sizing: border-box;
+}
+
+.group-slider:before {
+  position: absolute;
+  content: "";
+  height: 25px; /* 원의 높이를 조정 */
+  width: 25px; /* 원의 너비를 조정 */
+  left: 6px; /* 원의 위치를 조정 */
+  top: 4px; /* 원의 위치를 조정 */
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+input:checked + .group-slider {
+  background-color: #282828;
+}
+
+input:checked + .group-slider:before {
+  transform: translateX(24px);
+}
+
+.group-slider.round {
+  border-radius: 24px; /* 타원 모양을 더 부드럽게 */
+}
+
+.group-slider.round:before {
+  border-radius: 50%;
+}

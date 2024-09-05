@@ -125,6 +125,21 @@ function MemoryPage() {
           ))
         )}
       </div>
+
+      {/* 새로운 pagination 컨테이너 추가 */}
+      <div className="pagination-container">
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={currentPage === index + 1 ? "active" : ""}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

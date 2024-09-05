@@ -240,7 +240,7 @@ const GroupPage = ({ groupId }) => {
                         })
                       }
                     />
-                    <span className="slider round"></span>
+                    <span className="group-slider"></span>
                   </div>
                 </label>
                 <label>
@@ -255,6 +255,7 @@ const GroupPage = ({ groupId }) => {
                 <button type="submit" onClick={handleSubmit}>
                   수정하기
                 </button>
+                <button onClick={handleModalClose}>닫기</button>
               </form>
             </div>
           </div>
