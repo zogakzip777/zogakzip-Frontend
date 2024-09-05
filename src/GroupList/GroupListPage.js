@@ -216,7 +216,11 @@ function GroupListPage() {
       });
 
       if (!response.ok) {
-        throw new Error("그룹 등록에 실패하였습니다.");
+        throw new Error(
+          formData.isPublic
+            ? "그룹 등록에 실패하였습니다."
+            : "비공개 그룹 등록 실패"
+        );
       }
 
       const groupData = await response.json();
@@ -277,7 +281,7 @@ function GroupListPage() {
           justifyContent: "space-between",
         }}
       >
-        <div>
+        <div className="button-container">
           <button
             onClick={handlePublicClick}
             className={
@@ -327,12 +331,12 @@ function GroupListPage() {
               alt="No groups available"
               className="empty-state-image"
             />
-            <p className="empty-state-message">
+            <p className="empty-state-message1">
               {formData.isPublic
                 ? "등록된 공개 그룹이 없습니다."
                 : "등록된 비공개 그룹이 없습니다."}
             </p>
-            <p className="empty-state-message">
+            <p className="empty-state-message2">
               가장 먼저 그룹을 만들어보세요!
             </p>
             <button className="empty-button" onClick={handleCreateGroupClick}>
@@ -434,11 +438,11 @@ function GroupListPage() {
       )}
 
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="group-modal">
+          <div className="group-modal-content">
             <h2>그룹 만들기</h2>
             <form onSubmit={handleSubmit}>
-              <div className="form-group group-name-wrapper">
+              <div className="form1-group group-name-wrapper">
                 <label htmlFor="groupName" className="group-name-label">
                   그룹명
                 </label>
@@ -457,7 +461,7 @@ function GroupListPage() {
                   </p>
                 )}
               </div>
-              <div className="form-group">
+              <div className="form1-group">
                 <label htmlFor="image-upload" className="label-image-upload">
                   대표 이미지
                 </label>
@@ -482,7 +486,7 @@ function GroupListPage() {
                   </label>
                 </div>
               </div>
-              <div className="form-group">
+              <div className="form1-group">
                 <label htmlFor="introduction" style={{ textAlign: "left" }}>
                   그룹 소개
                 </label>
@@ -495,7 +499,7 @@ function GroupListPage() {
                   className="group-introduction-input"
                 ></textarea>
               </div>
-              <div className="form-group">
+              <div className="form1-group">
                 <label style={{ textAlign: "left" }}>그룹 공개 선택</label>
                 <div
                   style={{
@@ -510,7 +514,7 @@ function GroupListPage() {
                   >
                     공개
                   </span>
-                  <label className="switch">
+                  <label className="group-switch">
                     <input
                       type="checkbox"
                       checked={formData.isPublic}
@@ -521,11 +525,11 @@ function GroupListPage() {
                         })
                       }
                     />
-                    <span className="slider round"></span>
+                    <span className="group-slider round"></span>
                   </label>
                 </div>
               </div>
-              <div className="form-group">
+              <div className="form1-group">
                 <label htmlFor="password" style={{ textAlign: "left" }}>
                   비밀번호 생성
                 </label>
@@ -549,9 +553,12 @@ function GroupListPage() {
       )}
 
       {passwordModalOpen && (
-        <div className="modal password-modal">
-          <div className="modal-content">
-            <h2>비공개 그룹 비밀번호 입력</h2>
+        <div className="group-modal password-modal">
+          <div className="group-modal-content">
+            <h2 className="group-password-header">비공개 그룹</h2>
+            <p className="group-password-message">
+              비공개 그룹에 접근하기 위해 권한 확인이 필요합니다.
+            </p>
             <input
               type="password"
               value={enteredPassword}
@@ -559,28 +566,52 @@ function GroupListPage() {
               className="password-input"
               placeholder="비밀번호를 입력하세요"
             />
-            <button onClick={handlePasswordSubmit}>확인</button>
-            <button onClick={() => setPasswordModalOpen(false)}>취소</button>
+            <div className="password-modal-buttons">
+              <button
+                className="password-confirm-button"
+                onClick={handlePasswordSubmit}
+              >
+                제출하기
+              </button>
+              <button
+                className="password-cancel-button"
+                onClick={() => setPasswordModalOpen(false)}
+              >
+                취소
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {successMessage && (
-        <div className="modal">
-          <div className="modal-content success-modal">
+        <div className="group-modal">
+          <div className="group-modal-content group-success-modal">
             <div className="success-message-text">그룹 만들기 성공</div>
             <div className="success-detail-message">{successMessage}</div>
-            <button onClick={handleCloseMessageModal}>확인</button>
+            <button
+              className="group-confirm-button"
+              onClick={handleCloseMessageModal}
+            >
+              확인
+            </button>
           </div>
         </div>
       )}
 
       {errorMessage && (
-        <div className="modal">
-          <div className="modal-content error-modal">
-            <div className="error-message-text">그룹 만들기 실패</div>
+        <div className="group-modal">
+          <div className="group-modal-content group-error-modal">
+            <div className="error-message-text">
+              {formData.isPublic ? "그룹 만들기 실패" : "그룹 접근 실패"}
+            </div>
             <div className="error-detail-message">{errorMessage}</div>
-            <button onClick={handleCloseMessageModal}>확인</button>
+            <button
+              className="group-confirm-button"
+              onClick={handleCloseMessageModal}
+            >
+              확인
+            </button>
           </div>
         </div>
       )}

@@ -1,15 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import './Comments.css';
+import React, { useState, useEffect, useCallback } from "react";
+import "./Comments.css";
 
 const CommentModal = ({ isOpen, onClose, onSubmit }) => {
-  const [newComment, setNewComment] = useState({ author: '', content: '', password: '' });
+  const [newComment, setNewComment] = useState({
+    nickname: "",
+    content: "",
+    password: "",
+  });
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(newComment);
-    setNewComment({ author: '', content: '', password: '' });
+    setNewComment({ nickname: "", content: "", password: "" });
     onClose();
   };
 
@@ -23,8 +27,10 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
             <input
               type="text"
               placeholder="닉네임을 입력해 주세요"
-              value={newComment.author}
-              onChange={(e) => setNewComment({ ...newComment, author: e.target.value })}
+              value={newComment.nickname}
+              onChange={(e) =>
+                setNewComment({ ...newComment, nickname: e.target.value })
+              }
               required
             />
           </div>
@@ -33,7 +39,9 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
             <textarea
               placeholder="댓글을 입력해 주세요"
               value={newComment.content}
-              onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
+              onChange={(e) =>
+                setNewComment({ ...newComment, content: e.target.value })
+              }
               required
             />
           </div>
@@ -43,11 +51,15 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
               type="password"
               placeholder="댓글 비밀번호를 생성해 주세요"
               value={newComment.password}
-              onChange={(e) => setNewComment({ ...newComment, password: e.target.value })}
+              onChange={(e) =>
+                setNewComment({ ...newComment, password: e.target.value })
+              }
               required
             />
           </div>
-          <button type="submit" className="submit-button">등록하기</button>
+          <button type="submit" className="submit-button">
+            등록하기
+          </button>
         </form>
       </div>
     </div>
@@ -65,13 +77,13 @@ const Comments = ({ postId }) => {
     setLoading(true);
     try {
       const response = await fetch(`/api/posts/${postId}/comments`);
-      if (!response.ok) throw new Error('Failed to fetch comments');
+      if (!response.ok) throw new Error("Failed to fetch comments");
       const data = await response.json();
       setComments(data);
       setError(null);
     } catch (error) {
-      console.error('Error fetching comments:', error);
-      setError('댓글을 불러오는 데 실패했습니다.');
+      console.error("Error fetching comments:", error);
+      setError("댓글을 불러오는 데 실패했습니다.");
     } finally {
       setLoading(false);
     }
@@ -84,71 +96,74 @@ const Comments = ({ postId }) => {
   const handleSubmit = async (newComment) => {
     try {
       const response = await fetch(`/api/posts/${postId}/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newComment),
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to post comment');
+        throw new Error(errorData.message || "Failed to post comment");
       }
       await fetchComments();
       setIsModalOpen(false);
-      alert('댓글이 등록되었습니다.');
+      alert("댓글이 등록되었습니다.");
     } catch (error) {
-      console.error('Error posting comment:', error);
+      console.error("Error posting comment:", error);
       alert(`댓글 등록에 실패했습니다: ${error.message}`);
     }
   };
 
   const handleEdit = async (commentId) => {
     try {
-      const password = prompt('비밀번호를 입력하세요');
-      const response = await fetch(`/api/comments/${commentId}/verify-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      if (!response.ok) throw new Error('Password verification failed');
-      const commentToEdit = comments.find(c => c.id === commentId);
+      const password = prompt("비밀번호를 입력하세요");
+      const response = await fetch(
+        `/api/comments/${commentId}/verify-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }
+      );
+      if (!response.ok) throw new Error("Password verification failed");
+      const commentToEdit = comments.find((c) => c.id === commentId);
       setEditingComment(commentToEdit);
     } catch (error) {
-      console.error('Error verifying password:', error);
-      alert('비밀번호가 일치하지 않습니다.');
+      console.error("Error verifying password:", error);
+      alert("비밀번호가 일치하지 않습니다.");
     }
   };
 
   const handleUpdate = async (updatedComment) => {
     try {
       const response = await fetch(`/api/comments/${updatedComment.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedComment),
       });
-      if (!response.ok) throw new Error('Failed to update comment');
+      if (!response.ok) throw new Error("Failed to update comment");
       setEditingComment(null);
       await fetchComments();
-      alert('댓글이 수정되었습니다.');
+      alert("댓글이 수정되었습니다.");
     } catch (error) {
-      console.error('Error updating comment:', error);
-      alert('댓글 수정에 실패했습니다.');
+      console.error("Error updating comment:", error);
+      alert("댓글 수정에 실패했습니다.");
     }
   };
 
   const handleDelete = async (commentId) => {
     try {
-      const password = prompt('댓글 삭제를 위해 비밀번호를 입력하세요');
+      const password = prompt("댓글 삭제를 위해 비밀번호를 입력하세요");
       const response = await fetch(`/api/comments/${commentId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      if (!response.ok) throw new Error('Failed to delete comment');
+      if (!response.ok) throw new Error("Failed to delete comment");
       await fetchComments();
-      alert('댓글이 삭제되었습니다.');
+      alert("댓글이 삭제되었습니다.");
     } catch (error) {
-      console.error('Error deleting comment:', error);
-      alert('댓글 삭제에 실패했습니다. 비밀번호를 확인해주세요.');
+      console.error("Error deleting comment:", error);
+      alert("댓글 삭제에 실패했습니다. 비밀번호를 확인해주세요.");
     }
   };
 
@@ -156,7 +171,12 @@ const Comments = ({ postId }) => {
     <div className="comments-section">
       <div className="comments-header">
         <h3>댓글</h3>
-        <button onClick={() => setIsModalOpen(true)} className="add-comment-button">댓글 등록</button>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="add-comment-button"
+        >
+          댓글 등록
+        </button>
       </div>
       <div className="comments-list">
         {loading ? (
@@ -167,8 +187,10 @@ const Comments = ({ postId }) => {
           comments.map((comment) => (
             <div key={comment.id} className="comment">
               <div className="comment-header">
-                <span className="comment-author">{comment.author}</span>
-                <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
+                <span className="comment-author">{comment.nickname}</span>
+                <span className="comment-date">
+                  {new Date(comment.createdAt).toLocaleString()}
+                </span>
               </div>
               <p className="comment-content">{comment.content}</p>
               <div className="comment-actions">
@@ -198,10 +220,17 @@ const Comments = ({ postId }) => {
             <h2>댓글 수정</h2>
             <textarea
               value={editingComment.content}
-              onChange={(e) => setEditingComment({ ...editingComment, content: e.target.value })}
+              onChange={(e) =>
+                setEditingComment({
+                  ...editingComment,
+                  content: e.target.value,
+                })
+              }
             />
             <div className="modal-actions">
-              <button onClick={() => handleUpdate(editingComment)}>수정 완료</button>
+              <button onClick={() => handleUpdate(editingComment)}>
+                수정 완료
+              </button>
               <button onClick={() => setEditingComment(null)}>취소</button>
             </div>
           </div>
