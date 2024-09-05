@@ -12,7 +12,7 @@ textarea {
 }
 
 /* 모달 스타일 */
-.modal {
+.group-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -26,34 +26,44 @@ textarea {
 }
 
 /* parent 사이즈 */
-.form-group {
+.form1-group {
   display: flex;
   flex-direction: column;
   justify-content: flex start;
   margin-bottom: 30px;
 }
 
-.form-group label {
+.form1-group label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
 /* 입력 필드 스타일 */
-.modal-content input,
-.modal-content textarea,
-.modal-content select {
+.group-modal-content input,
+.group-modal-content textarea,
+.group-modal-content select {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.form1-group input[type="text"],
+.form1-group input[type="password"],
+.form1-group textarea {
   width: 400px;
-  /*height: 45px;*/
+  height: 45px; /* 수정: height를 45px로 통일 */
   padding: 8px;
-  margin-top: 0px;
   box-sizing: border-box;
   border: 1px solid #dddddd;
   border-radius: 6px;
 }
 
 /* 모달 콘텐츠 스타일 */
-.modal-content {
+.group-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -63,7 +73,7 @@ textarea {
 }
 
 /* Textarea의 포커스 상태 스타일 */
-.modal-content textarea:focus {
+.group-modal-content textarea:focus {
   border-color: black; /* 포커스 시 테두리 색상 변경 */
   border-width: 1px; /* 테두리 두께 유지 */
   outline: none; /* 기본 포커스 아웃라인 제거 */
@@ -71,7 +81,7 @@ textarea {
 }
 
 /* 그룹 만들기 헤더 스타일 */
-.modal-content h2 {
+.group-modal-content h2 {
   margin: 0 auto;
   width: 113px;
   height: 30px;
@@ -84,13 +94,13 @@ textarea {
   color: #282828;
   background: none;
   white-space: nowrap;
+  margin-bottom: 20px;
 }
 
 /* 그룹명 라벨 스타일 */
 .group-name-label {
   width: 44px;
   height: 20px;
-  font-family: "Spoqa Han Sans Neo", sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 20.03px;
@@ -112,6 +122,7 @@ textarea {
   background: #fafafa;
   border: 1px solid #dddddd;
   height: 45px;
+
 }
 
 /* 그룹명을 입력해 주세요 텍스트 스타일 */
@@ -131,20 +142,20 @@ textarea {
 }
 
 /* 오류가 발생한 입력 필드 스타일 */
-.modal-content input.error {
+.group-modal-content input.error {
   border-color: red;
   box-sizing: border-box;
 }
 
 /* 입력 중 상태 (focus) 스타일 */
-.modal-content input:focus {
+.group-modal-content input:focus {
   border-color: black; /* 검은색 테두리로 변경 */
   outline: none;
   box-sizing: border-box;
 }
 
 /* 오류가 발생한 상태에서 클릭 시 진한 빨간색 테두리 유지 */
-.modal-content input.error:focus {
+.group-modal-content input.error:focus {
   border-color: red;
   outline: none;
   box-sizing: border-box;
@@ -306,9 +317,12 @@ textarea {
 /*그룹소개끝*/
 
 /* 그룹공개선택 부모 요소 스타일 */
-.form-group > div {
+.form1-group > div {
   display: flex;
+  flex-direction: row;
   align-items: center; /* 수직 중앙 정렬 */
+  justify-content: flex-start; /* 좌측 정렬 */
+  gap: 10px;
 }
 
 /*공개 라벨*/
@@ -322,20 +336,20 @@ textarea {
 }
 
 /* 토글 스위치 스타일 */
-.switch {
+.group-switch {
   position: relative;
   display: inline-block;
   width: 48px;
   height: 24px;
 }
 
-.switch input {
+.group-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.slider {
+.group-slider {
   position: absolute;
   cursor: pointer;
   top: 0px;
@@ -348,7 +362,7 @@ textarea {
   box-sizing: border-box;
 }
 
-.slider:before {
+.group-slider:before {
   position: absolute;
   content: "";
   height: 22px;
@@ -361,19 +375,19 @@ textarea {
   box-sizing: border-box;
 }
 
-input:checked + .slider {
+input:checked + .group-slider {
   background-color: #282828;
 }
 
-input:checked + .slider:before {
+input:checked + .group-slider:before {
   transform: translateX(24px);
 }
 
-.slider.round {
+.group-slider.round {
   border-radius: 15px;
 }
 
-.slider.round:before {
+.group-slider.round:before {
   border-radius: 50%;
 }
 
@@ -410,17 +424,17 @@ input:checked + .slider:before {
 /*비밀번호끝*/
 
 /* 버튼 스타일 */
-.modal-content button {
+.group-modal-content button {
   margin-top: 10px;
   padding: 10px 15px;
   background-color: #282828 !important ;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.modal-content button[type="button"] {
+.group-modal-content button[type="button"] {
   background-color: #ccc !important;
   margin-left: 10px;
 }
@@ -428,7 +442,7 @@ input:checked + .slider:before {
 /*버튼끝*/
 
 /* 그룹 만들기 성공 모달 스타일 */
-.success-modal {
+.group-success-modal {
   width: 480px;
   height: 298px;
   border-radius: 6px;
@@ -459,7 +473,7 @@ input:checked + .slider:before {
 }
 
 .success-detail-message {
-  width: 196px;
+  width: 216px;
   height: 18px;
   font-size: 14px;
   font-weight: 400;
@@ -470,13 +484,18 @@ input:checked + .slider:before {
   color: #282828; /* 배경을 검은색으로 설정 */
   margin: 0 auto;
   opacity: 1; /* 보이게 설정 */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  border-radius: 6px;
 }
 
+
+
 /* 그룹 만들기 실패 모달 스타일 */
-.error-modal {
+.group-error-modal {
   width: 480px;
   height: 298px;
-  border-radius: 6px 6px 6px 6px;
+  border-radius: 6px;
   background: #fafafa;
   padding: 0px;
   box-sizing: border-box;
@@ -503,6 +522,23 @@ input:checked + .slider:before {
   margin-top: 80px;
 }
 
+.error-detail-message{
+  width: 216px;
+  height: 18px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17.53px;
+  letter-spacing: -0.03em;
+  text-align: center;
+  background: #fafafa; /* 텍스트 색상을 흰색으로 설정 */
+  color: #282828; /* 배경을 검은색으로 설정 */
+  margin: 0 auto;
+  opacity: 1; /* 보이게 설정 */
+  margin-top: 20px;
+  margin-bottom: 50px;
+  border-radius: 6px;
+}
+
 /* 버튼 활성화 상태 스타일 */
 .active {
   background-color: #282828;
@@ -524,15 +560,7 @@ select {
   border-radius: 6px;
 }
 
-/* 그룹 만들기 버튼 스타일 */
-button {
-  padding: 10px 15px;
-  background-color: #282828;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+
 
 /* 공개 및 비공개 그룹 그리드 스타일 */
 
@@ -651,66 +679,20 @@ button {
   font-weight: 400;
   color: #282828; /* 값의 색상 */
   margin-top: 0px;
+  display: flex;          /* 가로 정렬을 위해 Flexbox 사용 */
+  align-items: center;     /* 수직 가운데 정렬 */
+  gap: 5px;                /* 이미지와 공감 수 사이 간격 */
 }
 
-/* 
-비공개 그룹 그리드 스타일 
-.private-grid .group-box {
-  width: 375px; 
-  height: 156px; 
-  background-color: #FAFAFA; 
-  border-radius: 12px ; 
-  border: 1px solid #DDDDDD; 
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
-} 
+/* like-icon의 크기 설정 및 바텀 마진 제거 */
+.like-icon {
 
-.private-grid .group-box img {
-  display: none; 
+  margin-bottom: 0 !important;        /* 바텀 마진 제거 */
 }
-
-.private-grid .group-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.private-grid .group-date-status {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
-}
-
-.private-grid .group-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
-.private-grid .group-introduction {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.private-grid .group-stats {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.private-grid .group-stats span {
-  font-size: 14px;
-  color: #777;
-}
-
-*/
 
 /* 더보기 버튼 스타일 */
 .load-more-button {
-  width: 1560px;
+  width: 100%;
   height: 60px;
   position: relative; /* 위치 조정 */
   gap: 0px;
@@ -724,10 +706,10 @@ button {
   align-items: center; /* 수직 가운데 정렬 */
 
   opacity: 1; /* 버튼의 투명도 설정 (1로 설정하여 보이도록 함) */
-  background: #fafafa; /* 배경색 */
+  background: none; /* 배경색 */
   cursor: pointer; /* 마우스 커서 변경 */
   font-size: 16px; /* 폰트 크기 */
-  font-weight: 400; /* 폰트 굵기 */
+  font-weight: 700; /* 폰트 굵기 */
   color: #282828; /* 텍스트 색상 */
   text-align: center; /* 텍스트 중앙 정렬 */
   letter-spacing: -0.03em; /* 글자 간격 */
@@ -736,9 +718,7 @@ button {
   color: #282828; /* 텍스트 색상 */
 }
 
-.load-more-button:hover {
-  background: #e0e0e0; /* 호버 시 배경색 변경 */
-}
+
 
 /* 공개/비공개 버튼 스타일 */
 .button-selected {
@@ -755,7 +735,9 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 22.5px;
-  margin-right: 10px;
+  display: inline-flex; /* 버튼 내부의 텍스트를 가로로 유지 */
+  white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 */
+  align-items: center; /* 텍스트를 세로 중앙 정렬 */
 }
 
 .button-unselected {
@@ -770,8 +752,21 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 22.5px;
-  margin-right: 10px;
+  display: inline-flex; /* 버튼 내부의 텍스트를 가로로 유지 */
+  white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 */
+  align-items: center; /* 텍스트를 세로 중앙 정렬 */
+
 }
+
+
+/* 버튼을 감싸는 컨테이너에 가로 정렬을 강제 */
+.button-container {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  gap: 10px; 
+}
+
 
 /* 그룹 만들기 버튼을 조각집 글자와 같은 높이에 위치시킴 */
 button[style*="margin-left: auto"] {
@@ -780,7 +775,8 @@ button[style*="margin-left: auto"] {
 
 /* 그룹명을 검색해 주세요 입력 박스 스타일 */
 .search-input {
-  width: 1186px; /* 너비 설정 */
+  /*flex-grow: 1;  남는 공간을 모두 차지 */
+  width: 1166px;  /*너비 설정 */
   height: 45px; /* 높이 설정 */
   top: 140px; /* 상단에서의 위치 */
   left: 354px; /* 왼쪽에서의 위치 */
@@ -788,12 +784,14 @@ button[style*="margin-left: auto"] {
   background: #f4f4f4; /* 배경 색상 설정 */
   border: none !important; /* 테두리 제거 */
   border-radius: 6px; /* 모서리 둥글게 설정 */
-  padding-left: 50px; /* 텍스트와 좌측 테두리 간격 조정 */
+  padding-left: 50px !important;  /*텍스트와 좌측 테두리 간격 조정 */
   box-sizing: border-box; /* 패딩을 포함한 박스 모델 적용 */
   background-image: url('/icon=search.png'); /* 배경 이미지 추가 */
   background-position: 15px center; /* 이미지 위치 (왼쪽에서 15px, 세로 중앙) */
   background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
   background-size: 20px 20px; /* 배경 이미지 크기 조정 */
+  margin-left: 20px; /* 공개/비공개 버튼과 검색 박스 사이의 간격 */
+
 }
 
 /* 검색 입력 필드에만 적용되는 플레이스홀더 스타일 */
@@ -807,9 +805,6 @@ button[style*="margin-left: auto"] {
   color: #b8b8b8; /* 글자 색상 설정 */
   opacity: 1; /* 투명도 설정 */
 }
-
-
-
 
 /* 정렬 기준 선택 박스 스타일 */
 .sort-select {
@@ -852,15 +847,19 @@ button[style*="margin-left: auto"] {
   pointer-events: none; /* 화살표 클릭 불가 */
 }
 
-/* 헤더 컨테이너 스타일 */
+/*헤더 컨테이너 스타일 */
 .header-container {
-  margin-bottom: 20px; /* 아래쪽 마진 */
+  margin-bottom: 20px; 
   display: flex;
-  align-items: center; /* 조각집 텍스트와 그룹 만들기 버튼 수직 정렬 */
-  justify-content: center; /* 좌우 간격을 최대한 멀리 설정 */
+  align-items: center; 
+  justify-content: space-between; 
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+
 }
 
-/* 조각집 텍스트 스타일 */
+/* 조각집 텍스트 스타일 
 .header-container h1 {
   margin: 0;
   font-size: 24px;
@@ -868,11 +867,14 @@ button[style*="margin-left: auto"] {
   width: 137px;
   height: 48px;
   text-align: center;
-}
+}*/
+
 .title {
   width: 137px;
   height: 48px;
   text-align: center; /* 조각집 글자를 수평 가운데 정렬 */
+  margin: 0 auto; /*수평 가운데 정렬을 위해 auto 마진 */
+  
 }
 
 /* 그룹 만들기 버튼 스타일 */
@@ -890,7 +892,25 @@ button[style*="margin-left: auto"] {
   border-radius: 6px;
   cursor: pointer;
   align-self: center; /* 조각집 텍스트와 수직으로 정렬 */
+  text-align: center;
+  right: 20px;
+  top: 50%;
+
+
 }
+
+
+/* 그룹 만들기 버튼 스타일 
+.create-group-button {
+  padding: 10px 15px;
+  background-color: #282828;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  top: 27px;
+  left: 
+}*/
 
 .create-group-button:hover {
   background-color: #1e1e1e; /* 호버 시 색상 변경 */
@@ -908,12 +928,12 @@ button[style*="margin-left: auto"] {
 */
 
 /* 빈 상태일 때의 이미지와 그룹 만들기 버튼 */
-.empty-state-container {
+.empty-state {
   display: flex;
   flex-direction: column; /* 세로 정렬 */
   align-items: center;
   justify-content: center;
-  height: 60vh; /* 화면 가운데에 위치 */
+  height: 80vh; /* 화면 가운데에 위치, 높이가 이게 맞나 */
   text-align: center; /* 가운데 정렬 */
 }
 
@@ -923,18 +943,75 @@ button[style*="margin-left: auto"] {
   margin-bottom: 20px;
 }
 
+/* 텍스트 스타일 */
+.empty-state-message1 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #8d8d8d
+}
 
+.empty-state-message2 {
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #8d8d8d
+}
 
 .empty-button {
+  width: 400px;
+  height: 50px;
   padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #282828;
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
+  margin-top: 80px;
+}
+/*빈 상태일 때 그룹만들기 버튼*/
+.group-password-header{
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.empty-button:hover {
-  background-color: #0056b3;
+/* 권한 확인 메시지 스타일 */
+.group-password-message {
+  font-size: 14px;
+  color: #666; /* 약간 흐린 회색 텍스트 */
+  margin-bottom: 20px;
+}
+
+/* 버튼 컨테이너 스타일 */
+.password-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* 확인 버튼 스타일 
+.password-confirm-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 1;
+  margin-right: 10px;
+}*/
+
+
+
+/* 취소 버튼 스타일 */
+.group-modal-content .password-cancel-button {
+  
+  color: #ffffff !important;
+  background-color: #d9d9d9 !important;
 }
