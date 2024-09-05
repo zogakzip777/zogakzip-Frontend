@@ -53,38 +53,44 @@ function MemoryPage() {
 
   return (
     <div className="memories-section">
-      <h2>추억 목록</h2>
-      <button
-        className="upload-button"
-        onClick={() => navigate(`/upload-memory/${groupId}`)}
-      >
-        추억 올리기
-      </button>
+      <div className="header">
+        <h2>추억 목록</h2>
+        <button
+          className="upload-button"
+          onClick={() => navigate(`/upload-memory/${groupId}`)}
+        >
+          추억 올리기
+        </button>
+      </div>
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <select onChange={(e) => setSortBy(e.target.value)} value={sortBy}>
-          <option value="latest">최신순</option>
-          <option value="mostCommented">댓글 많은 순</option>
-          <option value="mostLiked">좋아요 많은 순</option>
-        </select>
-        <div className="toggle-buttons">
+        <div className="left-controls">
           <button
-            onClick={() => setIsPublic(true)}
             className={isPublic ? "active" : ""}
+            onClick={() => setIsPublic(true)}
           >
             공개
           </button>
           <button
-            onClick={() => setIsPublic(false)} // 비공개 버튼 클릭 시 상태 변경
             className={!isPublic ? "active" : ""}
+            onClick={() => setIsPublic(false)}
           >
             비공개
           </button>
+        </div>
+        <div className="search-input">
+          <input
+            type="text"
+            placeholder="태그 혹은 제목을 입력해 주세요"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+        </div>
+        <div className="right-controls">
+          <select onChange={(e) => setSortBy(e.target.value)} value={sortBy}>
+            <option value="latest">추천순</option>
+            <option value="mostCommented">댓글 많은 순</option>
+            <option value="mostLiked">좋아요 많은 순</option>
+          </select>
         </div>
       </div>
       <div className="memories-container">
@@ -98,30 +104,26 @@ function MemoryPage() {
               onClick={() => handlePostClick(post.id)}
             >
               <img src={post.imageUrl || logo} alt={post.title} />
-              <h3>{post.title}</h3>
-              <div className="tags">{post.tags.join(", ")}</div>
-              <div className="meta">
-                <span>
-                  {post.location} | {post.moment}
-                </span>
-                <span>
-                  {post.likeCount} ❤️ | {post.commentCount} 💬
-                </span>
+              <div className="memory-info">
+                <h3>{post.title}</h3>
+                <div className="tags">#{post.tags.join(", ")}</div>
+                <div className="meta">
+                  <span>
+                    {post.location} | {post.moment}
+                  </span>
+                  <span>
+                    <img
+                      src="/iconpng/icon=flower.png"
+                      alt="Flower"
+                      style={{ width: "15px", height: "15px" }}
+                    />
+                    {post.likeCount} 💬 {post.commentCount}
+                  </span>
+                </div>
               </div>
             </div>
           ))
         )}
-      </div>
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
-          >
-            {index + 1}
-          </button>
-        ))}
       </div>
     </div>
   );

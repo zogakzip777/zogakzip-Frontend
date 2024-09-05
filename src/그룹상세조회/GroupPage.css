@@ -1,120 +1,146 @@
 .group-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: "Arial", sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 1560px;
+  margin: 30px auto;
+  padding: 15px;
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+  font-size: 13px;
+  background-color: #fafafa;
+  display: flex;
+}
+
+.header-container {
+  width: 100%;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  display: center;
 }
 
 .group-content {
-  display: flex;
-  align-items: center; /* 수직 중앙 정렬 */
+  margin-bottom: 15px;
 }
 
-.group-image {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.group-content h1 {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
 }
 
-.group-image img {
-  width: 100%;
-  max-width: 300px; /* 이미지 크기 조정 */
-  border-radius: 8px;
+.group-content h2 {
+  font-size: 15px !important;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
 }
 
 .group-info {
-  flex: 2;
-  padding-left: 20px; /* 이미지와의 간격 */
   display: flex;
-  flex-direction: column;
+  gap: 0px;
+  font-size: 15px;
+  font-weight: 200;
+  line-height: 9px;
+  letter-spacing: -0.03em;
+  color: #282828;
+  margin-bottom: 0px;
+  margin-right: 800px;
 }
 
-.group-info h1 {
-  font-size: 1.8rem;
-  margin: 0;
+.badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0px;
 }
 
-.group-info p {
-  margin: 5px 0;
-  color: #555;
+.badges span {
+  background-color: #dddddd;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 10px;
+}
+
+.group-meta {
+  display: flex;
+  gap: 5px;
+  font-size: 4px;
+  color: #8d8d8d;
+  margin-bottom: 5px;
+}
+
+.group-image {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.group-image img {
+  width: 500px; /* 원하는 너비 */
+  height: 500px; /* 원하는 높이 */
+  object-fit: cover; /* 비율 유지 */
+  margin-right: 50px;
+}
+
+.group-description {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  margin-bottom: 15px;
 }
 
 .buttons {
   display: flex;
-  justify-content: flex-start; /* 버튼을 왼쪽으로 정렬 */
-  margin-top: auto; /* 버튼을 아래쪽으로 위치시키기 */
-}
-
-.group-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: "Arial", sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.group-content {
-  display: flex;
-  align-items: center; /* 수직 중앙 정렬 */
-}
-
-.group-image {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.group-image img {
-  width: 100%;
-  max-width: 300px; /* 이미지 크기 조정 */
-  border-radius: 8px;
-}
-
-.group-info {
-  flex: 2;
-  padding-left: 20px; /* 이미지와의 간격 */
-  display: flex;
   flex-direction: column;
-}
-
-.group-info h1 {
-  font-size: 1.8rem;
-  margin: 0;
-}
-
-.group-info p {
-  margin: 5px 0;
-  color: #555;
-}
-
-.buttons {
-  display: flex;
-  justify-content: flex-start; /* 버튼을 왼쪽으로 정렬 */
-  margin-top: auto; /* 버튼을 아래쪽으로 위치시키기 */
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  align-items: flex-end; /* 오른쪽 정렬 */
 }
 
 .buttons button {
-  padding: 8px 12px; /* 버튼 크기 조정 */
+  display: center;
+  align-items: center;
+  background: none;
   border: none;
-  border-radius: 5px;
-  background-color: #282828;
-  color: white;
   cursor: pointer;
-  font-size: 0.9rem; /* 글자 크기도 약간 줄임 */
-  margin-right: 10px; /* 버튼 간격 추가 */
+  font-size: 14px;
+  color: #282828;
+  padding: 6px 10px;
 }
 
-.buttons button:hover {
-  background-color: #3a3a3a;
+.buttons button img {
+  margin-right: 4px;
 }
 
-.buttons button:hover {
-  background-color: #3a3a3a;
+.like-button {
+  background-color: #282828;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 16px;
+}
+
+.group-stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.group-stats span {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.group-stats img {
+  margin-right: 4px;
+  width: 18px;
+  height: 18px;
+}
+
+.loading,
+.error,
+.not-found {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 15px;
 }

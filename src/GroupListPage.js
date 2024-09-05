@@ -300,6 +300,7 @@ function GroupListPage() {
 
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <input
+            image="/iconpng/icon=search.png" /* 배경 이미지 추가 */
             type="text"
             className="search-input"
             placeholder="그룹명을 검색해 주세요"

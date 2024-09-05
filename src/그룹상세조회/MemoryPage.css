@@ -2,12 +2,18 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  text-align: center;
 }
 
-h2 {
-  font-size: 28px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 28px;
+  margin: 0;
 }
 
 .upload-button {
@@ -15,87 +21,109 @@ h2 {
   color: white;
   border: none;
   padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
+}
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
+.left-controls button {
+  background-color: #ccc;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-items: baseline;
+}
+
+.left-controls button.active {
+  background-color: #333;
+  color: white;
+}
+
+.right-controls select {
+  background-color: white;
+  border-color: #ccc;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-items: baseline;
+}
+
+.search-input {
+  width: 800px; /* 너비 설정 */
+  height: 45px; /* 높이 설정 */
+  top: 140px; /* 상단에서의 위치 */
+  left: 354px; /* 왼쪽에서의 위치 */
+  gap: 0px;
+  background: #f4f4f4; /* 배경 색상 설정 */
+  border: none !important; /* 테두리 제거 */
+  border-radius: 6px; /* 모서리 둥글게 설정 */
+  padding-left: 50px; /* 텍스트와 좌측 테두리 간격 조정 */
+  box-sizing: border-box; /* 패딩을 포함한 박스 모델 적용 */
+  background-position: 15px center; /* 이미지 위치 (왼쪽에서 15px, 세로 중앙) */
+  background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+  background-size: 20px 20px; /* 배경 이미지 크기 조정 */
+}
+
+.search-input input {
+  width: 800px; /* 너비 설정 */
+  height: 45px; /* 높이 설정 */
+  top: 145px; /* 상단에서의 위치 */
+  left: 50px; /* 왼쪽에서의 위치 */
+  gap: 0px;
+  background: #f4f4f4; /* 배경 색상 설정 */
+  border: none !important; /* 테두리 제거 */
+  border-radius: 6px; /* 모서리 둥글게 설정 */
+  box-sizing: border-box; /* 패딩을 포함한 박스 모델 적용 */
+  background-position: 10px center; /* 이미지 위치 (왼쪽에서 15px, 세로 중앙) */
+  background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+  background-size: 20px 20px; /* 배경 이미지 크기 조정 */
+}
+
 .memories-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
 .memory-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border-radius: 5px;
   overflow: hidden;
-  width: 280px;
-  text-align: left;
+  cursor: pointer;
 }
 
 .memory-card img {
   width: 100%;
-  height: auto;
+  height: 200px;
+  object-fit: cover;
 }
 
-.memory-card h3 {
-  font-size: 18px;
-  margin: 10px;
+.memory-info {
+  padding: 10px;
+}
+
+.memory-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
 }
 
 .tags {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
-  margin: 10px;
+  margin-bottom: 5px;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  color: #999;
-  margin: 10px;
-}
-
-/* memorypage 전용 스타일 */
-.memorypage .memories-section {
-  /* 추가적인 스타일을 여기에 작성할 수 있습니다. */
-}
-
-.password-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.password-modal form {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  width: 400px;
-}
-
-.password-modal input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.password-modal button {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
+  font-size: 12px;
+  color: #666;
 }

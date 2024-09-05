@@ -14,7 +14,10 @@ function App() {
         <Route path="/" element={<GroupListPage />} />
         <Route path="/group/:groupId" element={<CombinedPage />} />
         <Route path="/upload-memory/:groupId" element={<UploadMemoryPage />} />
-        <Route path="/password-verification/:postId" element={<PasswordVerification />} />
+        <Route
+          path="/password-verification/:postId"
+          element={<PasswordVerification />}
+        />
         <Route path="/post/:postId" element={<PostDetail />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
