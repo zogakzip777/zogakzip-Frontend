@@ -99,8 +99,7 @@ const PostDetail = () => {
               ))}
           </div>
           <div className="post-meta">
-            <span>{post.location}</span>
-            <span>{new Date(post.date).toLocaleDateString()}</span>
+            <span>{post.location} | {post.moment}</span>
           </div>
         </div>
 
@@ -134,7 +133,7 @@ const PostDetail = () => {
           </span>
           <span>
             <img src="/iconpng/icon=bubble.png" alt="Comments" style={{ width: "15px", height: "15px" }} />
-            {post.comments ? post.comments.length : 0}
+            {post.commentCount || 0}
           </span>
         </div>
 
