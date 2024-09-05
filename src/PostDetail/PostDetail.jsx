@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Comments from "../Comments/Comments";
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
 import "./PostDetail.css";
 
 const PostDetail = () => {
-  const { groupId, postId } = useParams();
+  const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,15 +38,16 @@ const PostDetail = () => {
 
   const handleLike = async () => {
     try {
-      const response = await fetch(
-        `/api/groups/${groupId}/posts/${postId}/like`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: "POST",
+      });
       if (!response.ok) throw new Error("Failed to like post");
       const updatedPost = await response.json();
-      setPost(updatedPost);
+      setPost(prevPost => ({
+        ...prevPost,
+        likes: updatedPost.likes,
+        likeCount: (prevPost.likeCount || 0) + 1
+      }));
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -58,7 +59,7 @@ const PostDetail = () => {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete post");
-      navigate(`/groups/${groupId}`);
+      navigate(`/groups/${post.groupId}`);
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -128,12 +129,12 @@ const PostDetail = () => {
 
         <div className="post-stats">
           <span>
-            <img src="/iconpng/icon=flower.png" alt="Likes" />
-            {post.likes} 공감
+            <img src="/iconpng/icon=flower.png" alt="Likes" style={{ width: "15px", height: "15px" }} />
+            {post.likeCount || 0}
           </span>
           <span>
-            <img src="/iconpng/icon=bubble.png" alt="Comments" />
-            {post.comments ? post.comments.length : 0} 댓글
+            <img src="/iconpng/icon=bubble.png" alt="Comments" style={{ width: "15px", height: "15px" }} />
+            {post.comments ? post.comments.length : 0}
           </span>
         </div>
 
