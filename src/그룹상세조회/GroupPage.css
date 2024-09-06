@@ -146,7 +146,7 @@
   margin-top: 15px;
 }
 
-.modal {
+.intro-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -159,37 +159,38 @@
   z-index: 1000;
 }
 
-.modal-content {
+.intro-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 5px;
-  width: 80%;
+  width: 100%;
   max-width: 500px;
   max-height: 80vh;
   overflow-y: auto;
 }
 
-.modal-content h2 {
+.intro-modal-content h2 {
   margin-top: 0;
 }
 
-.modal-content form {
+.intro-modal-content form {
   display: flex;
   flex-direction: column;
 }
 
-.modal-content label {
+.intro-modal-content label {
   margin-bottom: 10px;
+  width: 100%;
 }
 
-.modal-content input,
-.modal-content textarea {
+.intro-modal-content input,
+.intro-modal-content textarea {
   width: 100%;
   padding: 5px;
   margin-top: 5px;
 }
 
-.modal-content button {
+.intro-modal-content button {
   margin-top: 10px;
   padding: 10px;
   background-color: #282828;
@@ -199,7 +200,7 @@
   cursor: pointer;
 }
 
-.modal-content button:hover {
+.intro-modal-content button:hover {
   background-color: #282828;
 }
 
