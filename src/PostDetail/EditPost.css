@@ -1,89 +1,101 @@
-.edit-post-modal {
+.edit-post-overlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1120px;
-  height: 794px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.edit-post-content {
+  width: 90%;
+  max-width: 1120px;
+  height: 90%;
+  max-height: 794px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
-.modal-header {
+.edit-post-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.modal-header h2 {
+.edit-post-header h2 {
   font-size: 24px;
   margin: 0;
 }
 
-.close-button {
+.edit-post-close-button {
   background: none;
   border: none;
   cursor: pointer;
 }
 
-.close-button img {
+.edit-post-close-button img {
   width: 30px;
   height: 30px;
 }
 
-.form-content {
+.edit-post-form-content {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   flex-grow: 1;
 }
 
-.form-left, .form-right {
-  width: 50%;
+.edit-post-form-left, .edit-post-form-right {
+  flex: 1 1 400px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.form-group {
+.edit-post-form-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-group label {
+.edit-post-form-group label {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"],
-.form-group textarea {
-  width: 400px;
-  height: 75px;
+.edit-post-form-group input[type="text"],
+.edit-post-form-group input[type="password"],
+.edit-post-form-group textarea {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.form-group textarea {
+.edit-post-form-group textarea {
   height: 150px;
   resize: vertical;
 }
 
-.file-input-wrapper {
+.edit-post-file-input-wrapper {
   position: relative;
-  width: 400px;
+  width: 100%;
 }
 
-.file-input-wrapper input[type="text"] {
+.edit-post-file-input-wrapper input[type="text"] {
   padding-right: 100px;
 }
 
-.file-input-label {
+.edit-post-file-input-label {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -94,26 +106,26 @@
   cursor: pointer;
 }
 
-.tags-container {
+.edit-post-tags-container {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 5px;
 }
 
-.tag {
+.edit-post-tag {
   background-color: #e0e0e0;
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 14px;
 }
 
-.date-input-wrapper {
+.edit-post-date-input-wrapper {
   position: relative;
-  width: 400px;
+  width: 100%;
 }
 
-.date-input-wrapper img {
+.edit-post-date-input-wrapper img {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -122,26 +134,26 @@
   height: 20px;
 }
 
-.toggle-wrapper {
+.edit-post-toggle-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.switch {
+.edit-post-switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 }
 
-.switch input {
+.edit-post-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.slider {
+.edit-post-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -153,7 +165,7 @@
   border-radius: 34px;
 }
 
-.slider:before {
+.edit-post-slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -165,16 +177,17 @@
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked + .edit-post-slider {
   background-color: #2196F3;
 }
 
-input:checked + .slider:before {
+input:checked + .edit-post-slider:before {
   transform: translateX(26px);
 }
 
-.submit-button {
-  width: 400px;
+.edit-post-submit-button {
+  width: 100%;
+  max-width: 400px;
   height: 50px;
   background-color: #333;
   color: white;
@@ -183,4 +196,16 @@ input:checked + .slider:before {
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
+  align-self: center;
+}
+
+@media (max-width: 768px) {
+  .edit-post-content {
+    width: 95%;
+    height: 95%;
+  }
+
+  .edit-post-form-left, .edit-post-form-right {
+    flex: 1 1 100%;
+  }
 }
