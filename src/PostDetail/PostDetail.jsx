@@ -20,7 +20,7 @@ const PostDetail = () => {
   const fetchPostDetail = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/posts/${postId}`);
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch post");
       }
@@ -37,7 +37,7 @@ const PostDetail = () => {
 
   const fetchGroupPosts = async () => {
     try {
-      const response = await fetch(`/api/groups/${groupId}/posts`);
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}/posts`);
       if (!response.ok) {
         throw new Error("Failed to fetch group posts");
       }
@@ -58,7 +58,7 @@ const PostDetail = () => {
 
   const handleLike = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}/like`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}/like`, {
         method: "POST",
       });
       if (!response.ok) throw new Error("Failed to like post");
@@ -75,7 +75,7 @@ const PostDetail = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete post");

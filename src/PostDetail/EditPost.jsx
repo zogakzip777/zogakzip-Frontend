@@ -38,7 +38,7 @@ const EditPost = ({ post, onClose, onEdit }) => {
     e.preventDefault();
     try {
       const verifyResponse = await fetch(
-        `/api/posts/${post.id}/verify-password`,
+        `${process.env.REACT_APP_PROXY}/api/posts/${post.id}/verify-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -59,7 +59,7 @@ const EditPost = ({ post, onClose, onEdit }) => {
         formData.append("image", newImage);
       }
 
-      const response = await fetch(`/api/posts/${post.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${post.id}`, {
         method: "PUT",
         body: JSON.stringify({
           nickname: editedPost.nickname,

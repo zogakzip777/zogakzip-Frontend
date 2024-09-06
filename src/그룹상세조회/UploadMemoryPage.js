@@ -53,7 +53,7 @@ function UploadMemory() {
       formDataImage.append("image", selectedFile);
 
       try {
-        const imageUploadResponse = await fetch("/api/image", {
+        const imageUploadResponse = await fetch(`${process.env.REACT_APP_PROXY}/api/image`, {
           method: "POST",
           body: formDataImage,
         });
@@ -77,7 +77,7 @@ function UploadMemory() {
     };
 
     try {
-      const response = await fetch(`/api/groups/${groupId}/posts`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFormData),

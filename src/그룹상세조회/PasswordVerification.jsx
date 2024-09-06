@@ -14,7 +14,7 @@ const PasswordVerification = () => {
     }
 
     try {
-      const response = await fetch(`/api/posts/${postId}/verify-password`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}/verify-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

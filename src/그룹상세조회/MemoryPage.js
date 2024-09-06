@@ -16,7 +16,7 @@ function MemoryPage() {
   const loadMemories = async () => {
     try {
       const response = await fetch(
-        `/api/groups/${groupId}/posts?page=${currentPage}&pageSize=12&sortBy=${sortBy}&keyword=${encodeURIComponent(
+        `${process.env.REACT_APP_PROXY}/api/groups/${groupId}/posts?page=${currentPage}&pageSize=12&sortBy=${sortBy}&keyword=${encodeURIComponent(
           keyword
         )}&isPublic=${isPublic ? 1 : 0}`
       );

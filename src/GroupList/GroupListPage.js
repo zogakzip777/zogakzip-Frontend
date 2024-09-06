@@ -32,7 +32,7 @@ function GroupListPage() {
   const fetchGroups = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/groups?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${searchKeyword}&isPublic=${formData.isPublic}`
+        `${process.env.REACT_APP_PROXY}/api/groups?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&keyword=${searchKeyword}&isPublic=${formData.isPublic}`
       );
       if (!response.ok) {
         throw new Error("그룹 목록 조회 실패");
@@ -128,7 +128,7 @@ function GroupListPage() {
   const handlePasswordSubmit = async () => {
     try {
       const response = await fetch(
-        `/api/groups/${selectedGroupId}/verify-password`,
+        `${process.env.REACT_APP_PROXY}/api/groups/${selectedGroupId}/verify-password`,
         {
           method: "POST",
           headers: {
@@ -189,7 +189,7 @@ function GroupListPage() {
       if (selectedFile) {
         const formDataImage = new FormData();
         formDataImage.append("image", selectedFile);
-        const imageUploadResponse = await fetch("/api/image", {
+        const imageUploadResponse = await fetch(`${process.env.REACT_APP_PROXY}/api/image`, {
           method: "POST",
           body: formDataImage,
         });
@@ -201,7 +201,7 @@ function GroupListPage() {
       }
 
       // 그룹 생성 요청
-      const response = await fetch("/api/groups", {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

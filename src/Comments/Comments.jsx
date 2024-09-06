@@ -81,7 +81,7 @@ const Comments = ({ postId }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/posts/${postId}/comments?page=${currentPage}&pageSize=10`
+        `${process.env.REACT_APP_PROXY}/api/posts/${postId}/comments?page=${currentPage}&pageSize=10`
       );
       if (!response.ok) throw new Error("Failed to fetch comments");
       const data = await response.json();
@@ -101,7 +101,7 @@ const Comments = ({ postId }) => {
 
   const handleSubmit = async (newComment) => {
     try {
-      const response = await fetch(`/api/posts/${postId}/comments`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newComment),
@@ -134,7 +134,7 @@ const Comments = ({ postId }) => {
 
   const handleUpdate = async (updatedComment) => {
     try {
-      const response = await fetch(`/api/comments/${updatedComment.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/comments/${updatedComment.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedComment),
@@ -157,7 +157,7 @@ const Comments = ({ postId }) => {
   const handleDelete = async (commentId) => {
     try {
       const password = prompt("댓글 삭제를 위해 비밀번호를 입력하세요");
-      const response = await fetch(`/api/comments/${commentId}`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/comments/${commentId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),

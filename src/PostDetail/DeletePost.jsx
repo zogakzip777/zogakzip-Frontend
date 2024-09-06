@@ -7,7 +7,7 @@ const DeletePost = ({ postId, onClose, onDelete }) => {
   const handleDelete = async () => {
     try {
       const verifyResponse = await fetch(
-        `/api/posts/${postId}/verify-password`,
+        `${process.env.REACT_APP_PROXY}/api/posts/${postId}/verify-password`,
         {
           method: "POST",
           headers: {
@@ -21,7 +21,7 @@ const DeletePost = ({ postId, onClose, onDelete }) => {
         throw new Error("비밀번호가 일치하지 않습니다.");
       }
 
-      const deleteResponse = await fetch(`/api/posts/${postId}`, {
+      const deleteResponse = await fetch(`${process.env.REACT_APP_PROXY}/api/posts/${postId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

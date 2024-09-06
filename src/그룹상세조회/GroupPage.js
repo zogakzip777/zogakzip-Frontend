@@ -23,7 +23,7 @@ const GroupPage = ({ groupId }) => {
     const fetchGroupData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/groups/${groupId}`);
+        const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}`);
         if (!response.ok) {
           throw new Error("네트워크 오류");
         }
@@ -74,7 +74,7 @@ const GroupPage = ({ groupId }) => {
         const formData = new FormData();
         formData.append("image", newImage);
 
-        const uploadResponse = await fetch("/api/image", {
+        const uploadResponse = await fetch(`${process.env.REACT_APP_PROXY}/api/image`, {
           method: "POST",
           body: formData,
         });
@@ -87,7 +87,7 @@ const GroupPage = ({ groupId }) => {
         imageUrl = uploadResult.imageUrl;
       }
 
-      const response = await fetch(`/api/groups/${groupId}`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -122,7 +122,7 @@ const GroupPage = ({ groupId }) => {
 
   const handleDeleteGroup = async () => {
     try {
-      const deleteResponse = await fetch(`/api/groups/${groupId}`, {
+      const deleteResponse = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: deletePassword }),
@@ -141,7 +141,7 @@ const GroupPage = ({ groupId }) => {
 
   const handleSendLike = async () => {
     try {
-      const response = await fetch(`/api/groups/${groupId}/like`, {
+      const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}/like`, {
         method: "POST",
       });
 
