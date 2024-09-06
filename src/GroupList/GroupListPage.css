@@ -585,7 +585,9 @@ select {
 /* 공개 그룹 이미지 스타일 */
 .group-box img {
   width: 100%;
-  height: auto; /* 높이를 이미지에 맞춰 유동적으로 조정 */
+  aspect-ratio: 1 / 1; /* 정사각형 비율 설정 */
+  object-fit: cover; /* 이미지가 잘리더라도 가로, 세로 비율을 유지하며 맞춤 */
+  
   border-radius: 6px;
   margin-bottom: 20px;
 }
@@ -767,10 +769,10 @@ button[style*="margin-left: auto"] {
 /* 그룹명을 검색해 주세요 입력 박스 스타일 */
 .group-search-input {
   
-  width: 1166px; /*너비 설정 */
+  width: 1186px; /*너비 설정 */
   height: 45px; /* 높이 설정 */
   top: 140px; /* 상단에서의 위치 */
-  left: 354px; /* 왼쪽에서의 위치 */
+  /*left: 354px;  왼쪽에서의 위치 */
   gap: 0px;
   background: #f4f4f4; /* 배경 색상 설정 */
   border: none !important; /* 테두리 제거 */
@@ -787,6 +789,7 @@ button[style*="margin-left: auto"] {
 
 /* 검색 입력 필드에만 적용되는 플레이스홀더 스타일 */
 .group-search-input::placeholder {
+  
   height: 18px;
   font-size: 14px;
   font-weight: 400;

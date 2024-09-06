@@ -404,7 +404,7 @@ function GroupListPage() {
                   className="group-box"
                   onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
                 >
-                  <div className="lsit-group-info">
+                  <div className="list-group-info">
                     <p className="group-date-status">
                       {formatDateDifference(group.createdAt)}{" "}
                       <span className="status-private">| 비공개</span>
