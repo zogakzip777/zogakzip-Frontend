@@ -304,7 +304,7 @@ function GroupListPage() {
           <input
             image="/iconpng/icon=search.png" /* 배경 이미지 추가 */
             type="text"
-            className="search-input"
+            className="group-search-input"
             placeholder="그룹명을 검색해 주세요"
             value={searchKeyword}
             onChange={handleSearchChange}
@@ -356,7 +356,7 @@ function GroupListPage() {
                   {group.imageUrl ? (
                     <img src={group.imageUrl} alt={group.name} />
                   ) : null}
-                  <div className="group-info">
+                  <div className="list-group-info">
                     <p className="group-date-status">
                       {formatDateDifference(group.createdAt)}
                       <span
@@ -404,7 +404,7 @@ function GroupListPage() {
                   className="group-box"
                   onClick={() => handleGroupClick(group.id, group.isPublic)} // 그룹 클릭 핸들러 수정
                 >
-                  <div className="group-info">
+                  <div className="lsit-group-info">
                     <p className="group-date-status">
                       {formatDateDifference(group.createdAt)}{" "}
                       <span className="status-private">| 비공개</span>
@@ -525,7 +525,7 @@ function GroupListPage() {
                         })
                       }
                     />
-                    <span className="group-slider round"></span>
+                    <span className="group-form-slider round"></span>
                   </label>
                 </div>
               </div>
