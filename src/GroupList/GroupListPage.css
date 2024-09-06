@@ -587,7 +587,7 @@ select {
   width: 100%;
   aspect-ratio: 1 / 1; /* 정사각형 비율 설정 */
   object-fit: cover; /* 이미지가 잘리더라도 가로, 세로 비율을 유지하며 맞춤 */
-  
+
   border-radius: 6px;
   margin-bottom: 20px;
 }
@@ -596,13 +596,12 @@ select {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  
 }
 
 .group-date-status {
   margin-top: 0px;
   margin-bottom: 10px;
-  text-align: left; 
+  text-align: left;
 }
 
 /* 공개/비공개 텍스트 스타일링 */
@@ -768,7 +767,6 @@ button[style*="margin-left: auto"] {
 
 /* 그룹명을 검색해 주세요 입력 박스 스타일 */
 .group-search-input {
-  
   width: 1186px; /*너비 설정 */
   height: 45px; /* 높이 설정 */
   top: 140px; /* 상단에서의 위치 */
@@ -783,13 +781,11 @@ button[style*="margin-left: auto"] {
   background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
   background-size: 20px 20px; /* 배경 이미지 크기 조정 */
   margin-left: 20px; /* 공개/비공개 버튼과 검색 박스 사이의 간격 */
-  background-image: url("/iconpng/icon=search.png"); /* 배경 이미지 경로 설정 */
-
+  background-image: url("./icon=search.png"); /* 배경 이미지 경로 설정 */
 }
 
 /* 검색 입력 필드에만 적용되는 플레이스홀더 스타일 */
 .group-search-input::placeholder {
-  
   height: 18px;
   font-size: 14px;
   font-weight: 400;
