@@ -61,7 +61,17 @@ const EditPost = ({ post, onClose, onEdit }) => {
 
       const response = await fetch(`/api/posts/${post.id}`, {
         method: "PUT",
-        body: formData,
+        body: JSON.stringify({
+          nickname: editedPost.nickname,
+          title: editedPost.title,
+          content: editedPost.content,
+          postPassword: editedPost.postPassword,
+          imageUrl: editedPost.imageUrl,
+          tags: editedPost.tags,
+          location: editedPost.location,
+          moment: editedPost.moment,
+          isPublic: editedPost.isPublic,
+        }),
       });
 
       if (!response.ok) {

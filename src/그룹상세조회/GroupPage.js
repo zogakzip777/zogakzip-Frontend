@@ -109,6 +109,17 @@ const GroupPage = ({ groupId }) => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewGroupData({ ...newGroupData, imageUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSendLike = async () => {
     try {
       const response = await fetch(`/api/groups/${groupId}/like`, {
@@ -205,14 +216,9 @@ const GroupPage = ({ groupId }) => {
                 <label>
                   대표 이미지:
                   <input
-                    type="text"
-                    value={newGroupData.imageUrl}
-                    onChange={(e) =>
-                      setNewGroupData({
-                        ...newGroupData,
-                        imageUrl: e.target.value,
-                      })
-                    }
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                   />
                 </label>
                 <label>
