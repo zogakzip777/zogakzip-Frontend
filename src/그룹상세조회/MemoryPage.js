@@ -95,7 +95,15 @@ function MemoryPage() {
       </div>
       <div className="memories-container">
         {posts.length === 0 ? (
-          <p>게시물이 없습니다.</p>
+          <div className = "empty-memory">
+            <img
+              src= {`${process.env.PUBLIC_URL}/icon.png`} 
+              alt="Empty state" 
+              className="empty-memory-image" // CSS 클래스 추가로 이미지 스타일링 가능
+            />
+            <p className="emptyMemory1">게시된 추억이 없습니다.</p>
+            <p className="emptyMemory2">첫 번째 추억을 올려보세요!</p>
+          </div>  
         ) : (
           posts.map((post) => (
             <div
