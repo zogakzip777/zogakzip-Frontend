@@ -4,15 +4,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 1120px;
-  height: 794px;
+  max-height: 90vh; /* 최대 높이를 뷰포트 높이의 90%로 제한 */
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 가능하게 설정 */
 }
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -40,9 +40,12 @@
   display: flex;
   gap: 20px;
   flex-grow: 1;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 가능하게 설정 */
+  padding-bottom: 20px; /* 하단 여백 추가 */
 }
 
-.form-left, .form-right {
+.form-left,
+.form-right {
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -149,7 +152,7 @@
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 34px;
 }
 
@@ -161,26 +164,22 @@
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #282828;
 }
 
 input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-.submit-button {
-  width: 400px;
-  height: 50px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 20px;
+.form-content {
+  display: flex;
+  gap: 20px;
+  flex-grow: 1;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 가능하게 설정 */
+  padding-bottom: 20px; /* 하단 여백 추가 */
 }
