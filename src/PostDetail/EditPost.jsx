@@ -47,15 +47,20 @@ const EditPost = ({ post, onClose, onEdit }) => {
       if (newImage) {
         formData.append("image", newImage);
       }
-
+  
       const response = await fetch(`/api/posts/${post.id}`, {
         method: "PUT",
+        headers: {
+          'Accept': 'application/json',
+        },
         body: formData,
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "게시물 수정에 실패했습니다.");
+        console.error("서버 응답:", response.status, response.statusText);
+        console.error("오류 데이터:", errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
       
       const updatedPost = await response.json();
@@ -73,7 +78,7 @@ const EditPost = ({ post, onClose, onEdit }) => {
       <div className="modal-header">
         <h2>추억 수정</h2>
         <button className="close-button" onClick={onClose}>
-          <img src="/iconpng/icon-x.png" alt="닫기" />
+          <img src="/iconpng/icon=x.png" alt="닫기" />
         </button>
       </div>
       <form onSubmit={handleSubmit}>
@@ -161,7 +166,7 @@ const EditPost = ({ post, onClose, onEdit }) => {
                   value={editedPost.date}
                   onChange={handleInputChange}
                 />
-                <img src="/iconpng/icon-calendar.png" alt="Calendar" />
+                <img src="/iconpng/icon=calendar.png" alt="Calendar" />
               </div>
             </div>
             <div className="form-group">
