@@ -69,7 +69,6 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
     </div>
   );
 };
-
 const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,7 +85,7 @@ const Comments = ({ postId }) => {
       );
       if (!response.ok) throw new Error("Failed to fetch comments");
       const data = await response.json();
-      setComments(Array.isArray(data.data) ? data.data : []); // 여기를 수정했습니다.
+      setComments(Array.isArray(data) ? data : []); // API 응답 구조에 따라 조정 필요
       setError(null);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -113,7 +112,7 @@ const Comments = ({ postId }) => {
         throw new Error(errorData.message || "Failed to post comment");
       }
       const postedComment = await response.json();
-      setComments(prevComments => Array.isArray(prevComments) ? [postedComment, ...prevComments] : [postedComment]);
+      setComments(prevComments => [postedComment, ...prevComments]);
       setIsModalOpen(false);
       alert("댓글이 등록되었습니다.");
     } catch (error) {
@@ -125,20 +124,12 @@ const Comments = ({ postId }) => {
   const handleEdit = async (commentId) => {
     try {
       const password = prompt("비밀번호를 입력하세요");
-      const response = await fetch(
-        `/api/comments/${commentId}/verify-password`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password }),
-        }
-      );
-      if (!response.ok) throw new Error("Password verification failed");
       const commentToEdit = comments.find((c) => c.id === commentId);
-      setEditingComment(commentToEdit);
+      if (!commentToEdit) throw new Error("Comment not found");
+      setEditingComment({...commentToEdit, password});
     } catch (error) {
-      console.error("Error verifying password:", error);
-      alert("비밀번호가 일치하지 않습니다.");
+      console.error("Error preparing comment edit:", error);
+      alert("댓글 수정 준비 중 오류가 발생했습니다.");
     }
   };
 
@@ -152,11 +143,9 @@ const Comments = ({ postId }) => {
       if (!response.ok) throw new Error("Failed to update comment");
       const updatedCommentData = await response.json();
       setComments(prevComments =>
-        Array.isArray(prevComments)
-          ? prevComments.map(comment =>
-              comment.id === updatedCommentData.id ? updatedCommentData : comment
-            )
-          : [updatedCommentData]
+        prevComments.map(comment =>
+          comment.id === updatedCommentData.id ? updatedCommentData : comment
+        )
       );
       setEditingComment(null);
       alert("댓글이 수정되었습니다.");
@@ -176,9 +165,7 @@ const Comments = ({ postId }) => {
       });
       if (!response.ok) throw new Error("Failed to delete comment");
       setComments(prevComments => 
-        Array.isArray(prevComments)
-          ? prevComments.filter(comment => comment.id !== commentId)
-          : []
+        prevComments.filter(comment => comment.id !== commentId)
       );
       alert("댓글이 삭제되었습니다.");
     } catch (error) {

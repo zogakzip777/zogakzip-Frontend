@@ -4,6 +4,7 @@ import "./EditPost.css";
 const EditPost = ({ post, onClose, onEdit }) => {
   const [editedPost, setEditedPost] = useState(post);
   const [newImage, setNewImage] = useState(null);
+  const [password, setPassword] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,6 +37,13 @@ const EditPost = ({ post, onClose, onEdit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const verifyResponse = await fetch(`/api/posts/${post.id}/verify-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (!verifyResponse.ok) throw new Error("Password verification failed");
+
       const formData = new FormData();
       Object.keys(editedPost).forEach(key => {
         if (key === "tags") {
@@ -47,19 +55,14 @@ const EditPost = ({ post, onClose, onEdit }) => {
       if (newImage) {
         formData.append("image", newImage);
       }
-  
+
       const response = await fetch(`/api/posts/${post.id}`, {
         method: "PUT",
-        headers: {
-          'Accept': 'application/json',
-        },
         body: formData,
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("서버 응답:", response.status, response.statusText);
-        console.error("오류 데이터:", errorData);
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
       
@@ -184,6 +187,16 @@ const EditPost = ({ post, onClose, onEdit }) => {
                 </label>
                 <span>공개</span>
               </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">수정 권한 인증</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="추억 비밀번호를 입력해 주세요"
+              />
             </div>
           </div>
         </div>
