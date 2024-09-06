@@ -188,8 +188,8 @@ const GroupPage = ({ groupId }) => {
           </button>
         </div>
         {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
+          <div className="intro-modal">
+            <div className="intro-modal-content">
               <h2>그룹 정보 수정</h2>
               <form onSubmit={handleSubmit}>
                 <label>
@@ -262,8 +262,8 @@ const GroupPage = ({ groupId }) => {
         )}
 
         {isDeleteModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
+          <div className="intro-modal">
+            <div className="intro-modal-content">
               <h2>그룹 삭제</h2>
               <label>
                 삭제 권한 인증:

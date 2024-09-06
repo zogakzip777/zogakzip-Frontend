@@ -6,23 +6,28 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between;  /* 가로 가운데 정렬 */
+  align-items: center;    
+  
   margin-bottom: 20px;
 }
 
 .header h2 {
   font-size: 28px;
   margin: 0;
+  
 }
 
 .upload-button {
+  width: 200px;
+  height: 45px;
   background-color: #333;
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight:700;
 }
 
 .search-container {
@@ -213,4 +218,29 @@
 
 .pagination button:hover {
   background-color: white; /* 호버 시 색상 변화 */
+}
+
+.empty-memory-image{
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+
+}
+
+
+.emptyMemory1{
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #8d8d8d;
+
+}
+
+
+.emptyMemory2{
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #8d8d8d;
+
 }
