@@ -8,14 +8,13 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
     password: "",
   });
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(newComment);
     setNewComment({ nickname: "", content: "", password: "" });
-    onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="comment-modal">
@@ -57,9 +56,14 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
               required
             />
           </div>
-          <button type="submit" className="submit-button">
-            등록하기
-          </button>
+          <div className="modal-actions">
+            <button type="submit" className="submit-button">
+              등록하기
+            </button>
+            <button type="button" onClick={onClose}>
+              취소
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -74,26 +78,24 @@ const Comments = ({ postId }) => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchComments = useCallback(
-    async (commentId) => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `/api/posts/${postId}/comments?commentId=${commentId}&page=${currentPage}&pageSize=10`
-        );
-        if (!response.ok) throw new Error("Failed to fetch comments");
-        const data = await response.json();
-        setComments(data);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-        setError("댓글을 불러오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [postId]
-  );
+  const fetchComments = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/posts/${postId}/comments?page=${currentPage}&pageSize=10`
+      );
+      if (!response.ok) throw new Error("Failed to fetch comments");
+      const data = await response.json();
+      setComments(Array.isArray(data) ? data : []);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      setError("댓글을 불러오는 데 실패했습니다.");
+      setComments([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [postId, currentPage]);
 
   useEffect(() => {
     fetchComments();
@@ -110,7 +112,8 @@ const Comments = ({ postId }) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to post comment");
       }
-      await fetchComments(1);
+      const postedComment = await response.json();
+      setComments(prevComments => Array.isArray(prevComments) ? [postedComment, ...prevComments] : [postedComment]);
       setIsModalOpen(false);
       alert("댓글이 등록되었습니다.");
     } catch (error) {
@@ -147,8 +150,14 @@ const Comments = ({ postId }) => {
         body: JSON.stringify(updatedComment),
       });
       if (!response.ok) throw new Error("Failed to update comment");
+      setComments(prevComments =>
+        Array.isArray(prevComments)
+          ? prevComments.map(comment =>
+              comment.id === updatedComment.id ? updatedComment : comment
+            )
+          : [updatedComment]
+      );
       setEditingComment(null);
-      await fetchComments();
       alert("댓글이 수정되었습니다.");
     } catch (error) {
       console.error("Error updating comment:", error);
@@ -165,7 +174,11 @@ const Comments = ({ postId }) => {
         body: JSON.stringify({ password }),
       });
       if (!response.ok) throw new Error("Failed to delete comment");
-      await fetchComments();
+      setComments(prevComments => 
+        Array.isArray(prevComments)
+          ? prevComments.filter(comment => comment.id !== commentId)
+          : []
+      );
       alert("댓글이 삭제되었습니다.");
     } catch (error) {
       console.error("Error deleting comment:", error);
