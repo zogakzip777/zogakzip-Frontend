@@ -260,11 +260,13 @@ function GroupListPage() {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <div className="header-container">
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.png`}
-          alt="조각집"
-          className="title"
-        />
+        <a href="/" className="title">
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="조각집"
+            className="title"
+          />
+        </a>
         <button
           onClick={handleCreateGroupClick}
           className="create-group-button"

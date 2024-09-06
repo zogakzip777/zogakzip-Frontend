@@ -44,7 +44,7 @@ const PostDetail = () => {
       const data = await response.json();
       setGroupPosts(data);
       setTotalPosts(data.length);
-      const index = data.findIndex(p => p.id === postId);
+      const index = data.findIndex((p) => p.id === postId);
       setCurrentIndex(index !== -1 ? index : 0);
     } catch (err) {
       console.error("Error fetching group posts:", err);
@@ -63,10 +63,10 @@ const PostDetail = () => {
       });
       if (!response.ok) throw new Error("Failed to like post");
       const updatedPost = await response.json();
-      setPost(prevPost => ({
+      setPost((prevPost) => ({
         ...prevPost,
         likes: updatedPost.likes,
-        likeCount: (prevPost.likeCount || 0) + 1
+        likeCount: (prevPost.likeCount || 0) + 1,
       }));
     } catch (error) {
       console.error("Error liking post:", error);
@@ -91,7 +91,7 @@ const PostDetail = () => {
   };
 
   const handleNavigate = (direction) => {
-    const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+    const newIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
     if (newIndex >= 0 && newIndex < totalPosts) {
       const newPostId = groupPosts[newIndex].id;
       navigate(`/groups/${groupId}/posts/${newPostId}`);
@@ -105,11 +105,13 @@ const PostDetail = () => {
   return (
     <div>
       <div className="header-container">
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.png`}
-          alt="조각집"
-          className="title"
-        />
+        <a href="/" className="title">
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="조각집"
+            className="title"
+          />
+        </a>
       </div>
       <div className="post-detail">
         <div className="post-header">
@@ -127,7 +129,9 @@ const PostDetail = () => {
               ))}
           </div>
           <div className="post-meta">
-            <span>{post.location} | {post.moment}</span>
+            <span>
+              {post.location} | {post.moment}
+            </span>
           </div>
         </div>
 
@@ -156,11 +160,19 @@ const PostDetail = () => {
 
         <div className="post-stats">
           <span>
-            <img src="/iconpng/icon=flower.png" alt="Likes" style={{ width: "15px", height: "15px" }} />
+            <img
+              src="/iconpng/icon=flower.png"
+              alt="Likes"
+              style={{ width: "15px", height: "15px" }}
+            />
             {post.likeCount || 0}
           </span>
           <span>
-            <img src="/iconpng/icon=bubble.png" alt="Comments" style={{ width: "15px", height: "15px" }} />
+            <img
+              src="/iconpng/icon=bubble.png"
+              alt="Comments"
+              style={{ width: "15px", height: "15px" }}
+            />
             {post.commentCount || 0}
           </span>
         </div>
@@ -183,18 +195,16 @@ const PostDetail = () => {
         )}
 
         <div className="group-posts-navigation">
-          <button 
-            onClick={() => handleNavigate('prev')} 
+          <button
+            onClick={() => handleNavigate("prev")}
             disabled={currentIndex === 0}
             className="nav-button"
           >
             &lt;
           </button>
-          <div className="current-post-index">
-            {currentIndex + 1}
-          </div>
-          <button 
-            onClick={() => handleNavigate('next')} 
+          <div className="current-post-index">{currentIndex + 1}</div>
+          <button
+            onClick={() => handleNavigate("next")}
             disabled={currentIndex === totalPosts - 1}
             className="nav-button"
           >

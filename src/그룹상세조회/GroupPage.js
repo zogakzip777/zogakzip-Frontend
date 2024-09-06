@@ -4,6 +4,7 @@ import logo from "./logo.png";
 
 const GroupPage = ({ groupId }) => {
   const [groupData, setGroupData] = useState(null);
+  const [newImage, setNewImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +13,7 @@ const GroupPage = ({ groupId }) => {
     name: "",
     imageUrl: "",
     introduction: "",
-    isPublic: false,
+    isPublic: 0,
     password: "",
   });
   const [deletePassword, setDeletePassword] = useState("");
@@ -67,26 +68,55 @@ const GroupPage = ({ groupId }) => {
     e.preventDefault();
 
     try {
+      let imageUrl = newGroupData.imageUrl;
+
+      if (newImage) {
+        const formData = new FormData();
+        formData.append("image", newImage);
+
+        const uploadResponse = await fetch("/api/image", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("이미지 업로드 실패");
+        }
+
+        const uploadResult = await uploadResponse.json();
+        imageUrl = uploadResult.imageUrl;
+      }
+
       const response = await fetch(`/api/groups/${groupId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: newGroupData.name,
-          password: newGroupData.password,
-          imageUrl: newGroupData.imageUrl,
-          isPublic: newGroupData.isPublic,
-          introduction: newGroupData.introduction,
+          ...newGroupData,
+          imageUrl: imageUrl,
         }),
       });
 
       if (!response.ok) {
-        throw new Error(response.body.message);
+        throw new Error("그룹 정보 업데이트 실패");
       }
+
       const updatedData = await response.json();
       setGroupData(updatedData);
       handleModalClose();
     } catch (err) {
       alert(err.message);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewGroupData({ ...newGroupData, imageUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -106,17 +136,6 @@ const GroupPage = ({ groupId }) => {
       handleDeleteModalClose();
     } catch (err) {
       alert(err.message);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewGroupData({ ...newGroupData, imageUrl: reader.result });
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -143,11 +162,13 @@ const GroupPage = ({ groupId }) => {
   return (
     <div>
       <div className="header-container">
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.png`}
-          alt="조각집"
-          className="title"
-        />
+        <a href="/" className="title">
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="조각집"
+            className="title"
+          />
+        </a>
       </div>
       <div className="group-container">
         <div className="group-image">
