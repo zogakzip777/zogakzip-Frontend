@@ -85,8 +85,7 @@ const Comments = ({ postId }) => {
       );
       if (!response.ok) throw new Error("Failed to fetch comments");
       const data = await response.json();
-      setComments(Array.isArray(data) ? data : []); // API 응답 구조에 따라 조정 필요
-      setError(null);
+      setComments(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
       console.error("Error fetching comments:", error);
       setError("댓글을 불러오는 데 실패했습니다.");
