@@ -84,7 +84,7 @@ const GroupPage = ({ groupId }) => {
         }
 
         const uploadResult = await uploadResponse.json();
-        imageUrl = uploadResult.imageUrl;
+        imageUrl =  `${process.env.REACT_APP_PROXY}${uploadResult.imageUrl}`;
       }
 
       const response = await fetch(`${process.env.REACT_APP_PROXY}/api/groups/${groupId}`, {

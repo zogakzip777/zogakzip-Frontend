@@ -62,7 +62,8 @@ function UploadMemory() {
           throw new Error("이미지 업로드 실패");
         }
         const imageUploadData = await imageUploadResponse.json();
-        imageUrl = imageUploadData.imageUrl;
+        imageUrl = `${process.env.REACT_APP_PROXY}${imageUploadData.imageUrl}`;
+        console.log(imageUrl)
       } catch (error) {
         console.error("이미지 업로드 중 오류 발생:", error);
         alert("이미지 업로드 실패");

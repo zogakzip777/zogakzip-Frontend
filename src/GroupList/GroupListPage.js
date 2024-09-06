@@ -197,7 +197,7 @@ function GroupListPage() {
           throw new Error("이미지 업로드 실패");
         }
         const imageUploadData = await imageUploadResponse.json();
-        imageUrl = imageUploadData.imageUrl;
+        imageUrl = `${process.env.REACT_APP_PROXY}${imageUploadData.imageUrl}`;
       }
 
       // 그룹 생성 요청
