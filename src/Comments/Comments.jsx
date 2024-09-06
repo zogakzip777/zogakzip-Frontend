@@ -111,7 +111,7 @@ const Comments = ({ postId }) => {
         throw new Error(errorData.message || "Failed to post comment");
       }
       const postedComment = await response.json();
-      setComments(prevComments => [postedComment, ...prevComments]);
+      setComments((prevComments) => [postedComment, ...prevComments]);
       setIsModalOpen(false);
       alert("댓글이 등록되었습니다.");
     } catch (error) {
@@ -125,7 +125,7 @@ const Comments = ({ postId }) => {
       const password = prompt("비밀번호를 입력하세요");
       const commentToEdit = comments.find((c) => c.id === commentId);
       if (!commentToEdit) throw new Error("Comment not found");
-      setEditingComment({...commentToEdit, password});
+      setEditingComment({ ...commentToEdit, password });
     } catch (error) {
       console.error("Error preparing comment edit:", error);
       alert("댓글 수정 준비 중 오류가 발생했습니다.");
@@ -141,8 +141,8 @@ const Comments = ({ postId }) => {
       });
       if (!response.ok) throw new Error("Failed to update comment");
       const updatedCommentData = await response.json();
-      setComments(prevComments =>
-        prevComments.map(comment =>
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
           comment.id === updatedCommentData.id ? updatedCommentData : comment
         )
       );
@@ -163,8 +163,8 @@ const Comments = ({ postId }) => {
         body: JSON.stringify({ password }),
       });
       if (!response.ok) throw new Error("Failed to delete comment");
-      setComments(prevComments => 
-        prevComments.filter(comment => comment.id !== commentId)
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
       );
       alert("댓글이 삭제되었습니다.");
     } catch (error) {
@@ -201,11 +201,11 @@ const Comments = ({ postId }) => {
               <p className="comment-content">{comment.content}</p>
               <div className="comment-actions">
                 <button onClick={() => handleEdit(comment.id)}>
-                  <img src="/public/iconpng/icon=edit.png" alt="Edit" />
+                  <img src="/iconpng/icon=edit.png" alt="Edit" />
                   수정
                 </button>
                 <button onClick={() => handleDelete(comment.id)}>
-                  <img src="/public/iconpng/icon=x.png" alt="Delete" />
+                  <img src="/iconpng/icon=x.png" alt="Delete" />
                   삭제
                 </button>
               </div>
