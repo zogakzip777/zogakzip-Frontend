@@ -1,0 +1,217 @@
+.comments-section {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.comments-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22.54px;
+  letter-spacing: -0.03em;
+}
+
+.add-comment-button {
+  background-color: #282828;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.comment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 480px;
+  height: 700px;
+  position: relative;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #DDDDDD;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group input {
+  height: 75px;
+}
+
+.form-group textarea {
+  height: 190px;
+  resize: none;
+}
+
+.submit-button {
+  width: 100%;
+  height: 50px;
+  background-color: #282828;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment {
+  border-bottom: 1px solid #DDDDDD;
+  padding: 20px 0;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.comment-author {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20.03px;
+}
+
+.comment-date {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20.03px;
+  color: #B8B8B8;
+}
+
+.comment-content {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20.03px;
+  margin-bottom: 10px;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.comment-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #8D8D8D;
+  display: flex;
+  align-items: center;
+}
+
+.comment-actions button img {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+.edit-comment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-comment-modal .modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 480px;
+}
+
+.edit-comment-modal h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.edit-comment-modal textarea {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #DDDDDD;
+  border-radius: 4px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.edit-comment-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.edit-comment-modal button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-comment-modal button:first-child {
+  background-color: #282828;
+  color: white;
+}
+
+.edit-comment-modal button:last-child {
+  background-color: #DDDDDD;
+  color: #282828;
+}

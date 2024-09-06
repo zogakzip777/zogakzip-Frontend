@@ -1,0 +1,260 @@
+.group-container {
+  max-width: 1560px;
+  margin: 30px auto;
+  padding: 15px;
+  font-family: "Spoqa Han Sans Neo", sans-serif;
+  font-size: 13px;
+  background-color: #fafafa;
+  display: flex;
+}
+
+.header-container {
+  width: 100%;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  display: center;
+}
+
+.group-content {
+  margin-bottom: 15px;
+}
+
+.group-content h1 {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.group-content h2 {
+  font-size: 15px !important;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.group-info {
+  display: table-column;
+  gap: 0px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 9px;
+  letter-spacing: -0.03em;
+  color: #282828;
+  margin-bottom: 0px;
+  margin-right: 000px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0px;
+}
+
+.badges span {
+  background-color: #dddddd;
+  padding: 8px 10px;
+  border-radius: 16px;
+  font-size: 10px;
+}
+
+.group-meta {
+  display: flex;
+  gap: 5px;
+  font-size: 4px;
+  color: #8d8d8d;
+  margin-bottom: 5px;
+}
+
+.group-image {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.group-image img {
+  width: 500px; /* 원하는 너비 */
+  height: 500px; /* 원하는 높이 */
+  object-fit: cover; /* 비율 유지 */
+  margin-right: 50px;
+}
+
+.group-description {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  margin-bottom: 15px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  align-items: flex-end; /* 오른쪽 정렬 */
+  margin-left: 450px;
+}
+
+.buttons button {
+  display: center;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #282828;
+  padding: 6px 10px;
+}
+
+.buttons button img {
+  margin-right: 4px;
+}
+
+.like-button {
+  background-color: #282828;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 16px;
+}
+
+.group-stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.group-stats span {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.group-stats img {
+  margin-right: 4px;
+  width: 18px;
+  height: 18px;
+}
+
+.loading,
+.error,
+.not-found {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.intro-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.intro-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.intro-modal-content h2 {
+  margin-top: 0;
+}
+
+.intro-modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro-modal-content label {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.intro-modal-content input,
+.intro-modal-content textarea {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.intro-modal-content button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #282828;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.intro-modal-content button:hover {
+  background-color: #282828;
+}
+
+.group-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.group-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.group-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dddddd;
+  transition: 0.4s;
+  border-radius: 24px; /* 타원 모양을 더 부드럽게 */
+  box-sizing: border-box;
+}
+
+.group-slider:before {
+  position: absolute;
+  content: "";
+  height: 25px; /* 원의 높이를 조정 */
+  width: 25px; /* 원의 너비를 조정 */
+  left: 6px; /* 원의 위치를 조정 */
+  top: 4px; /* 원의 위치를 조정 */
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+input:checked + .group-slider {
+  background-color: #282828;
+}
+
+input:checked + .group-slider:before {
+  transform: translateX(24px);
+}
+
+.group-slider.round {
+  border-radius: 24px; /* 타원 모양을 더 부드럽게 */
+}
+
+.group-slider.round:before {
+  border-radius: 50%;
+}
