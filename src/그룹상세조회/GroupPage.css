@@ -44,7 +44,7 @@
   letter-spacing: -0.03em;
   color: #282828;
   margin-bottom: 0px;
-  margin-right: 800px;
+  margin-right: 000px;
 }
 
 .badges {
@@ -55,7 +55,7 @@
 
 .badges span {
   background-color: #dddddd;
-  padding: 4px 8px;
+  padding: 8px 10px;
   border-radius: 16px;
   font-size: 10px;
 }
@@ -95,6 +95,7 @@
   margin-bottom: 20px;
   margin-top: 50px;
   align-items: flex-end; /* 오른쪽 정렬 */
+  margin-left: 450px;
 }
 
 .buttons button {
