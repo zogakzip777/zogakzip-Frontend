@@ -159,7 +159,7 @@ const GroupPage = ({ groupId }) => {
           <p>
             게시물 {groupData.postCount} | 그룹 공감 {groupData.likeCount}
           </p>
-          <p>#{groupData.introduction}</p>
+          <p>{groupData.introduction}</p>
           <div className="badges">
             <div className="group-content">
               <h2>획득 배지</h2>
