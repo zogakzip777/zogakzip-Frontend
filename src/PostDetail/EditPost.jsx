@@ -11,41 +11,44 @@ const EditPost = ({ post, onClose, onEdit }) => {
     if (type === "file") {
       setNewImage(e.target.files[0]);
     } else if (type === "checkbox") {
-      setEditedPost(prev => ({ ...prev, [name]: checked }));
+      setEditedPost((prev) => ({ ...prev, [name]: checked }));
     } else {
-      setEditedPost(prev => ({ ...prev, [name]: value }));
+      setEditedPost((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const handleTagInput = (e) => {
     if (e.key === "Enter" && e.target.value.trim()) {
-      setEditedPost(prev => ({
+      setEditedPost((prev) => ({
         ...prev,
-        tags: [...(prev.tags || []), e.target.value.trim()]
+        tags: [...(prev.tags || []), e.target.value.trim()],
       }));
       e.target.value = "";
     }
   };
 
   const removeTag = (indexToRemove) => {
-    setEditedPost(prev => ({
+    setEditedPost((prev) => ({
       ...prev,
-      tags: prev.tags.filter((_, index) => index !== indexToRemove)
+      tags: prev.tags.filter((_, index) => index !== indexToRemove),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const verifyResponse = await fetch(`/api/posts/${post.id}/verify-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
+      const verifyResponse = await fetch(
+        `/api/posts/${post.id}/verify-password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        }
+      );
       if (!verifyResponse.ok) throw new Error("Password verification failed");
 
       const formData = new FormData();
-      Object.keys(editedPost).forEach(key => {
+      Object.keys(editedPost).forEach((key) => {
         if (key === "tags") {
           formData.append(key, JSON.stringify(editedPost[key] || []));
         } else if (key !== "image") {
@@ -63,12 +66,14 @@ const EditPost = ({ post, onClose, onEdit }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
       }
-      
+
       const updatedPost = await response.json();
       onEdit(updatedPost);
-      alert('게시물이 성공적으로 수정되었습니다.');
+      alert("게시물이 성공적으로 수정되었습니다.");
       onClose();
     } catch (error) {
       console.error("게시물 수정 오류:", error);
@@ -114,7 +119,7 @@ const EditPost = ({ post, onClose, onEdit }) => {
                 <input
                   type="text"
                   readOnly
-                  value={newImage ? newImage.name : (editedPost.image || "")}
+                  value={newImage ? newImage.name : editedPost.image || ""}
                   placeholder="파일을 선택해 주세요"
                 />
                 <label className="file-input-label">
@@ -140,12 +145,15 @@ const EditPost = ({ post, onClose, onEdit }) => {
                 placeholder="태그를 입력 후 Enter"
               />
               <div className="tags-container">
-                {editedPost.tags && editedPost.tags.map((tag, index) => (
-                  <span key={index} className="tag">
-                    #{tag}
-                    <button type="button" onClick={() => removeTag(index)}>&times;</button>
-                  </span>
-                ))}
+                {editedPost.tags &&
+                  editedPost.tags.map((tag, index) => (
+                    <span key={index} className="tag">
+                      #{tag}
+                      <button type="button" onClick={() => removeTag(index)}>
+                        &times;
+                      </button>
+                    </span>
+                  ))}
               </div>
             </div>
             <div className="form-group">
@@ -200,7 +208,9 @@ const EditPost = ({ post, onClose, onEdit }) => {
             </div>
           </div>
         </div>
-        <button type="submit" className="submit-button">수정 완료</button>
+        <button type="submit" className="submit-button">
+          수정 완료
+        </button>
       </form>
     </div>
   );
