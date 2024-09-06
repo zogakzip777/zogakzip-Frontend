@@ -86,7 +86,7 @@ const Comments = ({ postId }) => {
       );
       if (!response.ok) throw new Error("Failed to fetch comments");
       const data = await response.json();
-      setComments(Array.isArray(data) ? data : []);
+      setComments(Array.isArray(data.data) ? data.data : []); // 여기를 수정했습니다.
       setError(null);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -150,12 +150,13 @@ const Comments = ({ postId }) => {
         body: JSON.stringify(updatedComment),
       });
       if (!response.ok) throw new Error("Failed to update comment");
+      const updatedCommentData = await response.json();
       setComments(prevComments =>
         Array.isArray(prevComments)
           ? prevComments.map(comment =>
-              comment.id === updatedComment.id ? updatedComment : comment
+              comment.id === updatedCommentData.id ? updatedCommentData : comment
             )
-          : [updatedComment]
+          : [updatedCommentData]
       );
       setEditingComment(null);
       alert("댓글이 수정되었습니다.");
@@ -259,4 +260,3 @@ const Comments = ({ postId }) => {
   );
 };
 
-export default Comments;

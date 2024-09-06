@@ -6,13 +6,16 @@ import DeletePost from "./DeletePost";
 import "./PostDetail.css";
 
 const PostDetail = () => {
-  const { postId } = useParams();
+  const { postId, groupId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [groupPosts, setGroupPosts] = useState([]);
 
   const fetchPostDetail = async () => {
     setLoading(true);
@@ -32,9 +35,26 @@ const PostDetail = () => {
     }
   };
 
+  const fetchGroupPosts = async () => {
+    try {
+      const response = await fetch(`/api/groups/${groupId}/posts`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch group posts");
+      }
+      const data = await response.json();
+      setGroupPosts(data);
+      setTotalPosts(data.length);
+      const index = data.findIndex(p => p.id === postId);
+      setCurrentIndex(index !== -1 ? index : 0);
+    } catch (err) {
+      console.error("Error fetching group posts:", err);
+    }
+  };
+
   useEffect(() => {
     fetchPostDetail();
-  }, [postId]);
+    fetchGroupPosts();
+  }, [postId, groupId]);
 
   const handleLike = async () => {
     try {
@@ -59,7 +79,7 @@ const PostDetail = () => {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete post");
-      navigate(`/groups/${post.groupId}`);
+      navigate(`/groups/${groupId}`);
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -68,6 +88,14 @@ const PostDetail = () => {
   const handleEdit = async (updatedPost) => {
     setPost(updatedPost);
     setIsEditing(false);
+  };
+
+  const handleNavigate = (direction) => {
+    const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+    if (newIndex >= 0 && newIndex < totalPosts) {
+      const newPostId = groupPosts[newIndex].id;
+      navigate(`/groups/${groupId}/posts/${newPostId}`);
+    }
   };
 
   if (loading) return <div className="loading">Loading...</div>;
@@ -153,6 +181,26 @@ const PostDetail = () => {
             onDelete={handleDelete}
           />
         )}
+
+        <div className="group-posts-navigation">
+          <button 
+            onClick={() => handleNavigate('prev')} 
+            disabled={currentIndex === 0}
+            className="nav-button"
+          >
+            &lt;
+          </button>
+          <div className="current-post-index">
+            {currentIndex + 1}
+          </div>
+          <button 
+            onClick={() => handleNavigate('next')} 
+            disabled={currentIndex === totalPosts - 1}
+            className="nav-button"
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );

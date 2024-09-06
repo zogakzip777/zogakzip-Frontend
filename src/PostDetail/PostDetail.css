@@ -184,3 +184,41 @@
   font-size: 18px;
   margin-top: 20px;
 }
+
+
+.group-posts-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.group-posts-navigation .nav-button {
+  width: 45px;
+  height: 45px;
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.group-posts-navigation .nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.group-posts-navigation .current-post-index {
+  width: 265px;
+  height: 45px;
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+}
