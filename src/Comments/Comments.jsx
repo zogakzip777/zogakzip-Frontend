@@ -260,3 +260,4 @@ const Comments = ({ postId }) => {
   );
 };
 
+export default Comments;
